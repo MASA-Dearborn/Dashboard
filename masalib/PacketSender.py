@@ -7,16 +7,20 @@ import sys
 import matplotlib.pyplot as plt
 
 class PacketSender():
-    def __init__(self, ip, port):
+    def __init__(self, ip, port, serial_reader=None):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.server_address = (ip, port)
         self.latency_list = []
         self.drop_rate_list = []
 
+        self.serial_reader = serial_reader
+
         self.sock.settimeout(5.0)
 
         self.drops = 0
         self.sends = 0
+
+        self.counter = 0
 
     @staticmethod
     def _convert_byte_to_bitlist(byt):
@@ -94,11 +98,27 @@ class PacketSender():
     
         return PacketSender._convert_bitlist_to_bytelist(bitlist[-full_crc_len:])
     
-    def send_random_packet(self, length, crc, count=0):
+    def increment_counter(self):
+        self.counter += 1
+        self.counter %= 256
+
+    def set_serial_reader(self, serial_reader):
+        self.serial_reader = serial_reader
+
+    def send_packet(self, data, crc, header=126, count=0):
+        pass
+
+    def send_next_serial_packet(self):
+        if len(self.serial_reader.packet_list) == 0:
+            return 0
+        
         crc_bytes = (len(crc) - 1) // 8 + 1
 
-        packet = np.append(126, count)
-        packet = np.append(packet, np.random.randint(256, size=length))
+        next_packet = self.serial_reader.packet_list[0]
+        self.serial_reader.packet_list.remove(next_packet)
+
+        packet = np.append(126, self.counter)
+        packet = np.append(packet, next_packet)
         packet = np.append(packet, [0 for i in range(crc_bytes)])
 
         checksum = PacketSender._compute_crc_remainder(packet, crc)
@@ -115,10 +135,7 @@ class PacketSender():
 
             self.sends += 1
 
-            try:
-                data, server = self.sock.recvfrom(1024)
-            except KeyboardInterrupt:
-                sys.exit(0)
+            data, server = self.sock.recvfrom(1024)
             
             data_list = PacketSender._convert_hexstring_to_bytelist(data)
             
@@ -134,9 +151,6 @@ class PacketSender():
 
         self.latency_list.append(deltat)
         self.drop_rate_list.append(self.drops / self.sends)
-
-    def send_packet(self, data, crc, header=126, count=0):
-        pass
     
     def plot_latency_list(self, filename):
         plt.plot(self.latency_list)

@@ -9,21 +9,27 @@ from masalib import PacketSender
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--ip", type=str, default="199.223.115.24", help="IP to send packets to")
-    parser.add_argument("--port", type=int, default=9992, help="Port to send packets to")
-    parser.add_argument("--bytes", type=int, help="Number of data bytes to send in a packet")
-    parser.add_argument("--packets", type=int, help="Number of packets to send")
-    parser.add_argument("--crc", type=str, help="CRC to use for error checking")
-    parser.add_argument("--latency", type=str, default="latency_plot.png", help="File to save latency plot to")
-    parser.add_argument("--droprate", type=str, default="drop_rate_plot.png", help="File to save drop rate plot to")
-
+    parser.add_argument("--config", type=str, help="Path to configuration file")
+    
     args = parser.parse_args()
 
-    sender = PacketSender(args.ip, args.port)
+    sender_list = []
 
-    for i in range(args.packets):
-        print("----", i, "----")
-        sender.send_random_packet(args.bytes, args.crc, i)
+    data_reader = SerialReader("COM1", 9600, start_byte=126, stop_byte=127)
+    data_sender = PacketSender("127.0.0.1", 9990, serial_reader=data_reader)
+    sender_list.append(data_sender)
+
+    gps_reader = SerialReader("COM2", 9600, start_byte=126, stop_byte=127)
+    gps_sender = PacketSender("127.0.0.1", 9990, serial_reader=gps_reader)
+    sender_list.append(gps_sender)
+
+    video_reader = SerialReader("COM3", 9600, start_byte=126, stop_byte=127)
+    video_sender = PacketSender("127.0.0.1", 9990, serial_reader=video_reader)
+    sender_list.append(video_sender)
+
+    while True:
+        for sender in sender_list:
+            sender.send_next_serial_packet()
     
     sender.close_socket()
 
