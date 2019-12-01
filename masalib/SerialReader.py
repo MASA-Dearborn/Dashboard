@@ -29,3 +29,25 @@ class SerialReader():
     def close_port(self):
         self.ser.close()
         self.thread.join()
+
+class DataSerialReader(SerialReader):
+    def __init__(self, port, speed, start_byte=126, stop_byte=127):
+        super().__init__(port, speed, start_byte, stop_byte)
+    
+    def read(self):
+        pass
+
+class TeleGPSSerialReader(SerialReader):
+    def __init__(self, port, speed, start_byte=126, stop_byte=127):
+        super().__init__(port, speed, start_byte, stop_byte)
+    
+    def read(self):
+        pass
+
+class EggFinderSerialReader(SerialReader):
+    def __init__(self, port, speed, start_byte=126, stop_byte=127):
+        super().__init__(port, speed, start_byte, stop_byte)
+    
+    def read(self):
+        pass
+

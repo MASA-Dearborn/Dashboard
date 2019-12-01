@@ -7,13 +7,11 @@ import sys
 import matplotlib.pyplot as plt
 
 class PacketSender():
-    def __init__(self, ip, port, serial_reader=None):
+    def __init__(self, ip, port):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.server_address = (ip, port)
         self.latency_list = []
         self.drop_rate_list = []
-
-        self.serial_reader = serial_reader
 
         self.sock.settimeout(5.0)
 
@@ -102,20 +100,17 @@ class PacketSender():
         self.counter += 1
         self.counter %= 256
 
-    def set_serial_reader(self, serial_reader):
-        self.serial_reader = serial_reader
-
     def send_packet(self, data, crc, header=126, count=0):
         pass
 
-    def send_next_serial_packet(self):
-        if len(self.serial_reader.packet_list) == 0:
+    def send_next_serial_packet(self, serial_reader):
+        if len(serial_reader.packet_list) == 0:
             return 0
         
         crc_bytes = (len(crc) - 1) // 8 + 1
 
-        next_packet = self.serial_reader.packet_list[0]
-        self.serial_reader.packet_list.remove(next_packet)
+        next_packet = serial_reader.packet_list[0]
+        serial_reader.packet_list.remove(next_packet)
 
         packet = np.append(126, self.counter)
         packet = np.append(packet, next_packet)

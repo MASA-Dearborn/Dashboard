@@ -3,7 +3,7 @@
 import argparse
 import json
 
-from masalib import SerialReader
+from masalib import DataSerialReader, TeleGPSSerialReader, EggFinderSerialReader
 from masalib import PacketSender
 
 def main():
@@ -13,23 +13,17 @@ def main():
     
     args = parser.parse_args()
 
-    sender_list = []
+    receiver_list = []
 
-    data_reader = SerialReader("COM1", 9600, start_byte=126, stop_byte=127)
-    data_sender = PacketSender("127.0.0.1", 9990, serial_reader=data_reader)
-    sender_list.append(data_sender)
+    receiver_list.append(DataSerialReader("COM1", 9600, start_byte=126, stop_byte=127))
+    receiver_list.append(TeleGPSSerialReader("COM2", 9600, start_byte=126, stop_byte=127))
+    receiver_list.append(EggFinderSerialReader("COM3", 9600, start_byte=126, stop_byte=127))
 
-    gps_reader = SerialReader("COM2", 9600, start_byte=126, stop_byte=127)
-    gps_sender = PacketSender("127.0.0.1", 9990, serial_reader=gps_reader)
-    sender_list.append(gps_sender)
-
-    video_reader = SerialReader("COM3", 9600, start_byte=126, stop_byte=127)
-    video_sender = PacketSender("127.0.0.1", 9990, serial_reader=video_reader)
-    sender_list.append(video_sender)
+    sender = PacketSender("127.0.0.1", 9990)
 
     while True:
-        for sender in sender_list:
-            sender.send_next_serial_packet()
+        for receiver in receiver_list:
+            sender.send_next_serial_packet(receiver)
     
     sender.close_socket()
 
