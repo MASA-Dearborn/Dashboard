@@ -18,6 +18,8 @@ class PacketReceiver():
         self.thread = threading.Thread(target=self.receive)
 
     def receive(self):
+        """The main packet receiving loop for the PacketReceiver."""
+        
         while True:
             data, server = self.sock.recvfrom(1024)
 
@@ -28,7 +30,7 @@ class PacketReceiver():
                 continue
             
             self.sock.sendto("00".encode(), server)
-            
+
             if data_list[0] not in self.data:
                 self.data[data_list[0]] = []
 

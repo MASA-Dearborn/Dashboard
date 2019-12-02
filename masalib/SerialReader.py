@@ -2,6 +2,7 @@
 
 import serial
 import threading
+import struct
 
 class SerialReader():
     def __init__(self, port, speed, start_byte=126, stop_byte=127):
@@ -12,6 +13,7 @@ class SerialReader():
         self.start_byte = start_byte
         self.stop_byte = stop_byte
 
+        self.list_lock = threading.Lock()
         self.thread = threading.Thread(target=self.read)
         self.thread.start()
     
@@ -22,6 +24,8 @@ class SerialReader():
         pass
 
     def close_port(self):
+        """Close the serial port and join the thread."""
+
         self.ser.close()
         self.thread.join()
 
@@ -30,6 +34,8 @@ class DataSerialReader(SerialReader):
         super().__init__(port, speed, start_byte, stop_byte)
     
     def read(self):
+        """The main data processing loop for the DataSerialReader."""
+
         while True:
             new_byte = int(self.ser.read())
 
@@ -51,7 +57,32 @@ class TeleGPSSerialReader(SerialReader):
         super().__init__(port, speed, start_byte, stop_byte)
 
     @staticmethod
+    def convert_bytelist_to_float(bytlst):
+        """
+        Converts a list of four bytes to a single float.
+        
+        Parameters:
+        bytlst (list): List containing ints from 0 to 255
+
+        Returns:
+        float: float value equal to bytes inputted
+        """
+
+        b = ''.join(chr(i) for i in bytlst)
+        return struct.unpack('>f', b)
+
+    @staticmethod
     def convert_hexstring_to_bytelist(hexstr):
+        """
+        Converts a nexstring to a list of integers between 0 and 255.
+
+        Parameters:
+        hexstr (str): Even length string containing characters from 0 to F
+
+        Returns:
+        list: List of ints with values from 0 to 255
+        """
+
         bytlst = []
         for i in range(int(len(hexstr) / 2)):
             byt = int(hexstr[i*2:i*2+2], 16)
@@ -60,6 +91,8 @@ class TeleGPSSerialReader(SerialReader):
         return bytlst
 
     def read(self):
+        """The main data processing loop for the TeleGPSSerialReader."""
+
         while True:
             next_char = chr(self.ser.read())
 
@@ -78,7 +111,9 @@ class TeleGPSSerialReader(SerialReader):
                 crc_check = bytelist[-2] & self.crc_mask
 
                 if crc_check == 128:
+                    self.list_lock.acquire()
                     self.packet_list.append(bytelist[1:-4])
+                    self.list_lock.release()
                 
                 self.current_string == ""
                 self.length = 0
