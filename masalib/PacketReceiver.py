@@ -15,7 +15,7 @@ class PacketReceiver():
 
         self.crc = "11001"
 
-        self.thread = threading.Thread(target=receive)
+        self.thread = threading.Thread(target=self.receive)
 
     def receive(self):
         while True:
@@ -26,6 +26,8 @@ class PacketReceiver():
             if PacketSender._compute_crc_remainder(data_list, self.crc) != [0]:
                 self.sock.sendto("7E".encode(), server)
                 continue
+            
+            self.sock.sendto("00".encode(), server)
             
             if data_list[0] not in self.data:
                 self.data[data_list[0]] = []

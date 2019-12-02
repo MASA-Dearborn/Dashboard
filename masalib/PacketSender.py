@@ -132,9 +132,7 @@ class PacketSender():
 
             data, server = self.sock.recvfrom(1024)
             
-            data_list = PacketSender._convert_hexstring_to_bytelist(data)
-            
-            if PacketSender._compute_crc_remainder(data_list, crc) == [0]:
+            if data == "00":
                 break
             
             self.drops += 1
