@@ -5,17 +5,22 @@ import numpy as np
 import time
 import sys
 import threading
+import queue
 
 from masalib import PacketSender
 
 class PacketReceiver():
-    def __init__(self):
+    def __init__(self, port, crc):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.address = (socket.gethostbyname(socket.gethostname()), port)
+        self.sock.bind(self.address)
+
         self.data = {}
 
-        self.crc = "11001"
+        self.crc = crc
 
         self.thread = threading.Thread(target=self.receive)
+        self.thread.start()
 
     def receive(self):
         """The main packet receiving loop for the PacketReceiver."""
@@ -34,6 +39,6 @@ class PacketReceiver():
             if data_list[0] not in self.data:
                 self.data[data_list[0]] = []
 
-            self.data[data_list[0]].append(data_list[1:-1])
+            self.data[data_list[0]].append(data_list[2:-1])
 
 

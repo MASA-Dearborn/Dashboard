@@ -4,7 +4,7 @@ import argparse
 import json
 
 from masalib import PacketReceiver
-from masalib import DatabaseWriter
+from masalib import SQLInterface
 
 def main():
     parser = argparse.ArgumentParser()
@@ -13,11 +13,14 @@ def main():
     
     args = parser.parse_args()
 
-    receiver = PacketReceiver()
-    database = DatabaseWriter()
+    with open(args.config, "r") as fp:
+        config = json.reads(fp.read())
+
+    receiver = PacketReceiver(9990, "11001")
+    database = SQLInterface("dean", "password", "main")
 
     while True:
-        database.write(receiver)
+        pass
 
 
 if __name__ == "__main__":

@@ -3,15 +3,17 @@
 import serial
 import threading
 import struct
+import queue
 
 class SerialReader():
-    def __init__(self, port, speed, start_byte=126, stop_byte=127):
+    def __init__(self, port, speed, header_byte):
         self.ser = serial.Serial(port, speed)
-        self.buffer = []
-        self.packet_list = []
+        self.packet_queue = queue.Queue(0)
 
         self.start_byte = start_byte
         self.stop_byte = stop_byte
+
+        self.header_byte = header_byte
 
         self.list_lock = threading.Lock()
         self.thread = threading.Thread(target=self.read)
@@ -30,8 +32,10 @@ class SerialReader():
         self.thread.join()
 
 class DataSerialReader(SerialReader):
-    def __init__(self, port, speed, start_byte=126, stop_byte=127):
-        super().__init__(port, speed, start_byte, stop_byte)
+    def __init__(self, port, speed, header_byte, start_byte=126, stop_byte=127):
+        self.buffer = []
+
+        super().__init__(port, speed, header_byte)
     
     def read(self):
         """The main data processing loop for the DataSerialReader."""
@@ -42,12 +46,12 @@ class DataSerialReader(SerialReader):
             if new_byte == self.start_byte:
                 self.buffer.clear()
             elif new_byte == self.stop_byte:
-                self.packet_list.append(self.buffer[:])
+                self.packet_queue.put(self.buffer[:])
             else:
                 self.buffer.append(new_byte)
 
 class TeleGPSSerialReader(SerialReader):
-    def __init__(self, port, speed, start_byte=126, stop_byte=127):
+    def __init__(self, port, speed, header_byte, start_byte=126, stop_byte=127):
         self.current_string = ""
         self.header = ["T", "E", "L", "E", "M"]
         self.length = 0
@@ -74,7 +78,7 @@ class TeleGPSSerialReader(SerialReader):
     @staticmethod
     def convert_hexstring_to_bytelist(hexstr):
         """
-        Converts a nexstring to a list of integers between 0 and 255.
+        Converts a hexstring to a list of integers between 0 and 255.
 
         Parameters:
         hexstr (str): Even length string containing characters from 0 to F
@@ -111,20 +115,55 @@ class TeleGPSSerialReader(SerialReader):
                 crc_check = bytelist[-2] & self.crc_mask
 
                 if crc_check == 128:
-                    self.list_lock.acquire()
-                    self.packet_list.append(bytelist[1:-4])
-                    self.list_lock.release()
+                    self.packet_queue.put(bytelist[1:-4])
                 
                 self.current_string == ""
                 self.length = 0
 
             
 class EggFinderSerialReader(SerialReader):
-    def __init__(self, port, speed, start_byte=126, stop_byte=127):
-        super().__init__(port, speed, start_byte, stop_byte)
+    def __init__(self, port, speed, header_byte, start_byte=126, stop_byte=127):
+        self.current_string = ""
+        super().__init__(port, speed, header_byte)
     
+    @staticmethod
+    def _convert_float_to_bytelist(self, flo):
+        """
+        Converts a float to a list of integers between 0 and 255.
+
+        Parameters:
+        flo (float): Floating-point number to convert
+
+        Returns:
+        list: List of numbers between 0 and 255 equivalent to the inputted float
+        """
+
+        ba = bytearray(struct.pack("f", flo))
+        return [int("%02x" % b, 16) for b in ba]
+
     def read(self):
-        pass
+        """The main data processing loop for the EggFinderSerialReader."""
+        while True:
+            next_char = chr(self.ser.read())
+
+            if next_char == '$' and self.current_string[0] == '$':
+                data = self.current_string.split(',')
+
+                if data[0] == "$GPGGA":
+                    pass # process positional data
+                elif data[0] == "$GPGSA":
+                    pass # process accuracy data
+                elif data[0] == "$GPGSV":
+                    pass # process satellite data
+
+                self.current_string = ""
+            
+            self.current_string += next_char
+            
+
+
+
+
             
             
 

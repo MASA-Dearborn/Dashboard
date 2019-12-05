@@ -192,17 +192,14 @@ class PacketSender():
         serial_reader (SerialReader): The SerialReader to send a packet from
         """
 
-        if len(serial_reader.packet_list) == 0:
+        if len(serial_reader.packet_queue.qsize()) == 0:
             return 0
         
         crc_bytes = (len(crc) - 1) // 8 + 1
 
-        serial_reader.list_lock.acquire()
-        next_packet = serial_reader.packet_list[0]
-        serial_reader.packet_list.remove(next_packet)
-        serial_reader.list_lock.release()
+        next_packet = serial_reader.packet_queue.get()
 
-        packet = np.append(126, self.counter)
+        packet = np.append(serial_reader.header_byte, self.counter)
         packet = np.append(packet, next_packet)
         packet = np.append(packet, [0 for i in range(crc_bytes)])
 

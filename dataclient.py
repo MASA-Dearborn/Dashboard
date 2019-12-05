@@ -13,11 +13,14 @@ def main():
     
     args = parser.parse_args()
 
+    with open(args.config, "r") as fp:
+        config = json.loads(fp.read())
+
     receiver_list = []
 
-    receiver_list.append(DataSerialReader("COM1", 9600, start_byte=126, stop_byte=127))
-    receiver_list.append(TeleGPSSerialReader("COM2", 9600, start_byte=126, stop_byte=127))
-    receiver_list.append(EggFinderSerialReader("COM3", 9600, start_byte=126, stop_byte=127))
+    receiver_list.append(DataSerialReader("COM1", 9600, header_byte=0, start_byte=126, stop_byte=127))
+    receiver_list.append(TeleGPSSerialReader("COM2", 9600, header_byte=1))
+    receiver_list.append(EggFinderSerialReader("COM3", 9600, header_byte=2))
 
     sender = PacketSender("127.0.0.1", 9990)
 
