@@ -192,7 +192,7 @@ class PacketSender():
         serial_reader (SerialReader): The SerialReader to send a packet from
         """
 
-        if len(serial_reader.packet_queue.qsize()) == 0:
+        if serial_reader.packet_queue.qsize() == 0:
             return 0
         
         crc_bytes = (len(crc) - 1) // 8 + 1

@@ -1,4 +1,5 @@
-# Data client
+# MASA Dashboard Data Client
+# By Dean Lawrence
 
 import argparse
 import json
@@ -14,15 +15,25 @@ def main():
     args = parser.parse_args()
 
     with open(args.config, "r") as fp:
-        config = json.loads(fp.read())
+        config = json.loads(fp.read())["client"]
 
     receiver_list = []
 
-    receiver_list.append(DataSerialReader("COM1", 9600, header_byte=0, start_byte=126, stop_byte=127))
-    receiver_list.append(TeleGPSSerialReader("COM2", 9600, header_byte=1))
-    receiver_list.append(EggFinderSerialReader("COM3", 9600, header_byte=2))
+    receiver_list.append(DataSerialReader(config["readers"]["Data"]["port"], 
+                                          config["readers"]["Data"]["speed"], 
+                                          header_byte=config["readers"]["Data"]["header"], 
+                                          start_byte=config["readers"]["Data"]["start_byte"], 
+                                          stop_byte=config["readers"]["Data"]["stop_byte"]))
 
-    sender = PacketSender("127.0.0.1", 9990)
+    receiver_list.append(TeleGPSSerialReader(config["readers"]["TeleGPS"]["port"], 
+                                             config["readers"]["TeleGPS"]["speed"], 
+                                             header_byte=config["readers"]["TeleGPS"]["header"]))
+
+    receiver_list.append(EggFinderSerialReader(config["readers"]["EggFinder"]["port"], 
+                                               config["readers"]["EggFinder"]["speed"], 
+                                               header_byte=config["readers"]["EggFinder"]["header"]))
+
+    sender = PacketSender(config["server_ip"], config["server_port"])
 
     while True:
         for receiver in receiver_list:

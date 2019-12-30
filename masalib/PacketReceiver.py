@@ -37,8 +37,8 @@ class PacketReceiver():
             self.sock.sendto("00".encode(), server)
 
             if data_list[0] not in self.data:
-                self.data[data_list[0]] = []
+                self.data[data_list[0]] = queue.Queue(0)
 
-            self.data[data_list[0]].append(data_list[2:-1])
+            self.data[data_list[0]].put(data_list[2:-1])
 
 

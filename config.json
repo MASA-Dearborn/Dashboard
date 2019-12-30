@@ -1,0 +1,30 @@
+{
+    "client": {
+        "server_ip": "127.0.0.1",
+        "server_port": 9990,
+        "readers": {
+            "Data": {"port": "COM0", "speed": 9600, "header": 0, "start_byte": 126, "stop_byte": 127},
+            "TeleGPS": {"port": "COM1", "speed": 9600, "header": 1},
+            "EggFinder": {"port": "COM2", "speed": 9600, "header": 2}
+        }
+    },
+    "server": {
+        "port": 9990,
+        "crc": "11001",
+        "database": "database.db",
+        "tables": {
+            "Data0": {
+                "header": 0,
+                "columns": {"count": "int"}
+            },
+            "TeleGPS0": {
+                "header": 1,
+                "columns": {"count": "int", "lat": "float", "long": "float", "height": "float"}
+            },
+            "EggFinder0": {
+                "header": 2,
+                "columns": {"count": "int", "lat": "float", "long": "float", "height": "float"}
+            }
+        }
+    }
+}

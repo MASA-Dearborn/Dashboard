@@ -68,3 +68,20 @@ class SQLiteInterface():
         ResultSet = ResultProxy.fetchall()      # Fetch data
 
         return ResultSet    # Return data
+    
+    def does_table_exist(self, table_name):
+        """
+        Checks if a table exists by a given name
+
+        Parameters:
+        table_name (str): Name of table to check
+
+        Returns:
+        boolean: Logical value of whether table exists or not
+        """
+        
+        try:
+            table = self.meta.tables[table_name]
+            return True
+        except:
+            return False
