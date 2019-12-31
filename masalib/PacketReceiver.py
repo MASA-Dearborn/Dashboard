@@ -19,6 +19,7 @@ class PacketReceiver():
         self.crc = crc
 
         self.thread = threading.Thread(target=self.receive)
+        self.thread.daemon = True
         self.thread.start()
     
     def init_data_item(self, header):

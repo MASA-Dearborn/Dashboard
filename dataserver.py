@@ -83,6 +83,7 @@ def main():
                 processed_columns[column] = value   # Store the processed value in the data dictionary
 
             database.insert(table, processed_columns) # Insert the data into the database table
+            print("Writing new entry in table:", table)
 
 
 if __name__ == "__main__":

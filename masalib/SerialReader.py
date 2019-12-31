@@ -10,13 +10,10 @@ class SerialReader():
         self.ser = serial.Serial(port, speed)
         self.packet_queue = queue.Queue(0)
 
-        self.start_byte = start_byte
-        self.stop_byte = stop_byte
-
         self.header_byte = header_byte
 
-        self.list_lock = threading.Lock()
         self.thread = threading.Thread(target=self.read)
+        self.thread.daemon = True
         self.thread.start()
     
     def read(self):
@@ -34,6 +31,9 @@ class SerialReader():
 class DataSerialReader(SerialReader):
     def __init__(self, port, speed, header_byte, start_byte=126, stop_byte=127):
         self.buffer = []
+
+        self.start_byte = start_byte
+        self.stop_byte = stop_byte
 
         super().__init__(port, speed, header_byte)
     
