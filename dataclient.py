@@ -37,7 +37,7 @@ def main():
 
     while True:
         for receiver in receiver_list:
-            sender.send_next_serial_packet(receiver)
+            sender.send_next_serial_packet(receiver, config["crc"])
     
     sender.close_socket()
 

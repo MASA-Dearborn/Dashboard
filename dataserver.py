@@ -19,11 +19,11 @@ def convert_bytelist_to_int(bytlst):
     int: Int value equal to bytes inputted
     """
 
-    sum = 0
+    s = 0
     for byt in bytlst:
-        sum = sum << 8 + byt
+        s = (s << 8) + byt
     
-    return sum
+    return s
 
 def convert_bytelist_to_float(bytlst):
     """
@@ -36,8 +36,7 @@ def convert_bytelist_to_float(bytlst):
     float: Float value equal to bytes inputted
     """
     
-    b = ''.join(chr(i) for i in bytlst)
-    return struct.unpack('>f', b)
+    return struct.unpack('>f', bytes(bytlst))[0]
 
 def main():
     parser = argparse.ArgumentParser()
@@ -47,20 +46,26 @@ def main():
     args = parser.parse_args()
 
     with open(args.config, "r") as fp:
-        config = json.reads(fp.read())["server"] # Grab the config information for the server
-
+        config = json.loads(fp.read())["server"] # Grab the config information for the server
+    
     receiver = PacketReceiver(config["port"], config["crc"]) # Create the packet receiver
     database = SQLiteInterface(config["database"])           # Create the SQL database interface
 
     # If a table in the config doesn't exist in the database, create it
     for table in config["tables"]:
+        receiver.init_data_item(config["tables"][table]["header"]) # Initialize the PacketReceiver dictionary
+
         if not database.does_table_exist(table):
             columns = [(col_name, config["tables"][table]["columns"][col_name]) for col_name in config["tables"][table]["columns"]]
             database.create_table(table, columns)
+            print("Created new table:", table)
 
     # Main processing loop
     while True:
         for table in config["tables"]:
+            if receiver.data[config["tables"][table]["header"]].qsize() == 0:
+                continue    # If this data queue is empty, move onto next queue
+
             data = receiver.data[config["tables"][table]["header"]].get() # Get next received packet from receiver
 
             columns = config["tables"][table]["columns"] # Extract the column metadata

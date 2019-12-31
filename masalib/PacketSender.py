@@ -133,7 +133,7 @@ class PacketSender():
         return bytlst
     
     @staticmethod
-    def _compute_crc_remainder(bytelist, crc):
+    def compute_crc_remainder(bytelist, crc):
         """
         Computes the crc remainder of a CRC on a list of bytes.
 
@@ -183,8 +183,39 @@ class PacketSender():
         """
 
         pass
+    
+    def send_spoof_packet(self, data, crc, header=0):
+        
+        crc_bytes = (len(crc) - 1) // 8 + 1
 
-    def send_next_serial_packet(self, serial_reader):
+        next_packet = data
+
+        packet = np.append(header, self.counter)
+        packet = np.append(packet, next_packet)
+        packet = np.append(packet, [0 for i in range(crc_bytes)])
+
+        checksum = PacketSender.compute_crc_remainder(packet, crc)
+        packet[-crc_bytes:] = checksum
+
+        msg = PacketSender._convert_bytelist_to_hexstring(packet)
+        new_packet = PacketSender._convert_hexstring_to_bytelist(msg)
+
+        while True:
+            print(msg)
+            self.sock.sendto(msg.encode(), self.server_address)
+
+            self.sends += 1
+
+            data, _ = self.sock.recvfrom(1024)
+            print(data)
+            
+            if data == b'00':
+                break
+            
+            self.drops += 1
+            print("Resending packet")
+
+    def send_next_serial_packet(self, serial_reader, crc):
         """
         Sends the next packet in the queue of a SerialReader.
         
