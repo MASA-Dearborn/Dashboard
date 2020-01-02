@@ -15,8 +15,9 @@ def main():
     args = parser.parse_args()
 
     with open(args.config, "r") as fp:
-        config = json.loads(fp.read())["client"]
+        config = json.loads(fp.read())["client"]    # Read in the client section from the json config
 
+    # Initialize the SerialReaders. Each listens for the processes data from a serial in within its own thread
     receiver_list = []
 
     receiver_list.append(DataSerialReader(config["readers"]["Data"]["port"], 
@@ -33,11 +34,11 @@ def main():
                                                config["readers"]["EggFinder"]["speed"], 
                                                header_byte=config["readers"]["EggFinder"]["header"]))
 
-    sender = PacketSender(config["server_ip"], config["server_port"])
+    sender = PacketSender(config["server_ip"], config["server_port"])   # Create the packet sender with the specified ip and port
 
-    while True:
+    while True: # Infinite loop
         for receiver in receiver_list:
-            sender.send_next_serial_packet(receiver, config["crc"])
+            sender.send_next_serial_packet(receiver, config["crc"]) # Iterate the list of receivers and send the next packet if it exists
     
     sender.close_socket()
 

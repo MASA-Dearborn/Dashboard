@@ -10,10 +10,10 @@ class PacketSender():
     def __init__(self, ip, port):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.server_address = (ip, port)
-        self.latency_list = []
-        self.drop_rate_list = []
+        self.latency_list = []  # List to store latency data
+        self.drop_rate_list = []    # List of store drop rate data
 
-        self.sock.settimeout(5.0)
+        self.sock.settimeout(1.0)   # Set the socket timeout to 1 second
 
         self.drops = 0
         self.sends = 0
@@ -206,12 +206,15 @@ class PacketSender():
 
             self.sends += 1
 
-            data, _ = self.sock.recvfrom(1024)
-            print(data)
-            
-            if data == b'00':
-                break
-            
+            try:
+                data, _ = self.sock.recvfrom(1024)
+                print(data)
+
+                if data == b'00':
+                    break
+            except socket.timeout:
+                pass
+
             self.drops += 1
             print("Resending packet")
 
@@ -223,44 +226,48 @@ class PacketSender():
         serial_reader (SerialReader): The SerialReader to send a packet from
         """
 
-        if serial_reader.packet_queue.qsize() == 0:
+        if serial_reader.packet_queue.qsize() == 0: # If the SerialReader doesn't have any data, exit the function
             return 0
         
         crc_bytes = (len(crc) - 1) // 8 + 1
 
-        next_packet = serial_reader.packet_queue.get()
+        next_packet = serial_reader.packet_queue.get()  # Fetch next packet from the SerialReader
 
+        # Construct a packet   | Header byte | Counter byte |         Data Packet         | CRC bytes |
         packet = np.append(serial_reader.header_byte, self.counter)
         packet = np.append(packet, next_packet)
         packet = np.append(packet, [0 for i in range(crc_bytes)])
 
         checksum = PacketSender._compute_crc_remainder(packet, crc)
-        packet[-crc_bytes:] = checksum
+        packet[-crc_bytes:] = checksum  # Compute and set CRC remainder as final few bytes
 
-        msg = PacketSender._convert_bytelist_to_hexstring(packet)
-        new_packet = PacketSender._convert_hexstring_to_bytelist(msg)
+        msg = PacketSender._convert_bytelist_to_hexstring(packet)   # Convert the packet to hex encoded string for sending
 
-        send_time = time.time_ns()
+        send_time = time.time_ns()  # Log current time
 
         while True:
             print(msg)
-            self.sock.sendto(msg.encode(), self.server_address)
+            self.sock.sendto(msg.encode(), self.server_address) # Send the packet to the server
 
             self.sends += 1
 
-            data, _ = self.sock.recvfrom(1024)
-            
-            if data == "00":
-                break
-            
+            try:
+                data, _ = self.sock.recvfrom(1024)  # Wait to receive the all clear from the server
+                print(data)
+
+                if data == b'00':   # If all clear, exit the loop
+                    break
+            except socket.timeout:
+                pass    # If the waiting times out, resend the packet
+
             self.drops += 1
             print("Resending packet")
 
-        receive_time = time.time_ns()
+        receive_time = time.time_ns()   # Log time after packet is received correctly
 
         deltat = receive_time - send_time
 
-        self.latency_list.append(deltat)
+        self.latency_list.append(deltat)    # Log data stuff
         self.drop_rate_list.append(self.drops / self.sends)
     
     def plot_latency_list(self, filename):

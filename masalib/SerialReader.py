@@ -8,11 +8,11 @@ import queue
 class SerialReader():
     def __init__(self, port, speed, header_byte):
         self.ser = serial.Serial(port, speed)
-        self.packet_queue = queue.Queue(0)
+        self.packet_queue = queue.Queue(0)  # Create a FIFO queue for storing data
 
-        self.header_byte = header_byte
+        self.header_byte = header_byte  # Initialize the header that will be associated with this data until it is stored server-side
 
-        self.thread = threading.Thread(target=self.read)
+        self.thread = threading.Thread(target=self.read)    # Create the listening thread
         self.thread.daemon = True
         self.thread.start()
     
@@ -51,29 +51,14 @@ class DataSerialReader(SerialReader):
                 self.buffer.append(new_byte)
 
 class TeleGPSSerialReader(SerialReader):
-    def __init__(self, port, speed, header_byte, start_byte=126, stop_byte=127):
-        self.current_string = ""
-        self.header = ["T", "E", "L", "E", "M"]
+    def __init__(self, port, speed, header_byte):
+        self.current_string = ""    # String to log current incoming stuff
+        self.header = ["T", "E", "L", "E", "M"] # List to isolate the header
         self.length = 0
-        self.crc_mask = 2 ** 7
+        self.crc_mask = 2 ** 7  # Mask for the CRC bit
         self.packet_length = 64
 
-        super().__init__(port, speed, start_byte, stop_byte)
-
-    @staticmethod
-    def convert_bytelist_to_float(bytlst):
-        """
-        Converts a list of four bytes to a single float.
-        
-        Parameters:
-        bytlst (list): List containing ints from 0 to 255
-
-        Returns:
-        float: float value equal to bytes inputted
-        """
-
-        b = ''.join(chr(i) for i in bytlst)
-        return struct.unpack('>f', b)
+        super().__init__(port, speed)
 
     @staticmethod
     def convert_hexstring_to_bytelist(hexstr):
@@ -98,13 +83,13 @@ class TeleGPSSerialReader(SerialReader):
         """The main data processing loop for the TeleGPSSerialReader."""
 
         while True:
-            next_char = chr(self.ser.read())
+            next_char = chr(self.ser.read())    # Read the next character from serial
 
-            if next_char in self.header:
+            if next_char in self.header:    # Don't worry about the character if its in the header
                 self.current_string == ""
                 self.length = 0
             
-            self.current_string += next_char
+            self.current_string += next_char    # Add the next character onto the string
             self.length += 1
 
             if self.length == 2:
@@ -122,7 +107,7 @@ class TeleGPSSerialReader(SerialReader):
 
             
 class EggFinderSerialReader(SerialReader):
-    def __init__(self, port, speed, header_byte, start_byte=126, stop_byte=127):
+    def __init__(self, port, speed, header_byte):
         self.current_string = ""
         super().__init__(port, speed, header_byte)
     
@@ -146,7 +131,7 @@ class EggFinderSerialReader(SerialReader):
         while True:
             next_char = chr(self.ser.read())
 
-            if next_char == '$' and self.current_string[0] == '$':
+            if next_char == '$' and self.current_string[0] == '$':  # If the next packet is about to start, process the current packet
                 data = self.current_string.split(',')
 
                 if data[0] == "$GPGGA":

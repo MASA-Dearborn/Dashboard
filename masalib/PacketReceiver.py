@@ -10,21 +10,22 @@ import queue
 class PacketReceiver():
     def __init__(self, port, crc):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.address = (socket.gethostbyname(socket.gethostname()), port)
+        self.address = (socket.gethostbyname(socket.gethostname()), port)   # Find ip of current computer and assign port
         #self.address = ("127.0.0.1", 9990)
-        self.sock.bind(self.address)
+        self.sock.bind(self.address)    # Bind socket to this computer and correct port
 
-        self.data = {}
+        self.data = {}  # Create dictionary to store data
 
-        self.crc = crc
+        self.crc = crc  # Assign the crc
+        self.last_packet = None # Variable for storing the last packet for handshaking
 
-        self.thread = threading.Thread(target=self.receive)
-        self.thread.daemon = True
-        self.thread.start()
+        self.thread = threading.Thread(target=self.receive) # Create separate thread to monitor data coming in
+        self.thread.daemon = True   # Set it to a daemon so we can kill it
+        self.thread.start()     # Start the thread
     
     def init_data_item(self, header):
-        if header not in self.data:
-            self.data[header] = queue.Queue(0)
+        if header not in self.data: # Function to help setup the data dictionary
+            self.data[header] = queue.Queue(0)  # Data will be stored in queues
     
     @staticmethod
     def _convert_byte_to_bitlist(byt):
@@ -133,7 +134,7 @@ class PacketReceiver():
         list: List of remainder bytes to be appended to end of new list
         """
 
-        crc_list = PacketReceiver._convert_bitstring_to_bitlist(crc)
+        crc_list = PacketReceiver._convert_bitstring_to_bitlist(crc)    # Convert string to list of 0s and 1s
         crc_len = len(crc_list)
         full_crc_len = (((crc_len - 1) // 8) + 1) * 8
         index = 0
@@ -159,16 +160,24 @@ class PacketReceiver():
         """The main packet receiving loop for the PacketReceiver."""
         
         while True:
-            data, server = self.sock.recvfrom(1024)
+            data, server = self.sock.recvfrom(1024) # Wait to receive packet
 
-            data_list = PacketReceiver._convert_hexstring_to_bytelist(data)
+            data_list = PacketReceiver._convert_hexstring_to_bytelist(data) # Convert the hex encoded packet into a list of integers
 
             if PacketReceiver.compute_crc_remainder(data_list, self.crc) != [0]:
-                self.sock.sendto("7E".encode(), server)
+                self.sock.sendto("7E".encode(), server) # If error checking fails, send a failure message
                 continue
             
-            self.sock.sendto("00".encode(), server)
+            if self.last_packet == None:
+                self.last_packet = data_list    # Initialize the last packet variable on the first time through
 
-            self.data[data_list[0]].put(data_list[2:-1])
+            if self.last_packet != data_list:   # Check if the same packet was sent twice in a row
+                self.data[self.last_packet[0]].put(self.last_packet[2:-1]) # If not, store the stored packet
+
+            self.last_packet = data_list    # Update the stored packet
+
+            self.sock.sendto("00".encode(), server) # Send the all clear
+
+            #self.data[data_list[0]].put(data_list[2:-1])
 
 
