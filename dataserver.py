@@ -19,11 +19,7 @@ def convert_bytelist_to_int(bytlst):
     int: Int value equal to bytes inputted
     """
 
-    s = 0
-    for byt in bytlst:
-        s = (s << 8) + byt
-    
-    return s
+    return struct.unpack('>i', bytes(bytlst))[0]
 
 def convert_bytelist_to_float(bytlst):
     """
