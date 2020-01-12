@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MASA Dashboard</title>
+        <link rel="shortcut icon" href="#" />
+        <style>
+            * {
+                font-size: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <input id="name-input" type="text"/>
+        <p id="main-text"></p>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script>
+            var timerId = setInterval(function(event) {
+                let message = {
+                    name: $("#name-input").val()
+                }
+                $.post("http://127.0.0.1:5000/fetch", JSON.stringify(message), function(response) {
+                    //$("#greeting").text(response.greeting);
+                    document.getElementById("main-text").textContent += response.data + "\n";
+                    console.log(response);
+                })
+            }, 1000);
+        </script>
+    </body>
+</html>
