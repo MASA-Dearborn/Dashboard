@@ -10,6 +10,11 @@ from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 cors = CORS(app, resources={r"/foo": {"origins": "http://localhost:port"}})
 
+engine = db.create_engine("sqlite:///database.db")
+meta = db.MetaData()
+meta.reflect(bind=engine)
+conn = engine.connect()
+
 @app.route('/fetch', methods=['POST'])
 @cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
 def fetch():
@@ -18,4 +23,6 @@ def fetch():
     response = {
         'data': 'Hello, ' + name + '!'
     }
+
+    #
     return jsonify(response)

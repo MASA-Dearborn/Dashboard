@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MASA Dashboard</title>
+        <style>
+            body {
+                background-color: rgba(159,159,170,0.12);
+            }
+            #page-header {
+                /*display: block;*/
+                overflow: hidden;
+                background-color: deepskyblue;
+                position: fixed;
+                size: fixed;
+                padding: 10px 0 0px 25px;
+                height: 100px;
+                top: 0;
+                left: 0;
+                width: 100%;
+                border-bottom: 1px solid gray;
+                z-index: 1000;
+            }
+            #header-logo {
+                float:left;
+                margin-right: 20px;
+                height: 90%;
+            }
+            #header-title {
+                position: center;
+                color: black;
+                font-family: "Comic Sans MS";
+                font-style: italic;
+                font-weight: 700;
+                margin-top: -20px;
+                font-size: 90px;
+            }
+            #main {
+                width: 100%;
+                height: 825px;
+                margin-top: 125px;
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                grid-column-gap: 15px;
+            }
+            #graph-container {
+                display: grid;
+                grid-template-rows: 3fr 1fr;
+                grid-row-gap: 15px;
+            }
+            #map-container {
+                display: grid;
+                grid-template-rows: 3fr 1fr;
+                grid-row-gap: 15px;
+            }
+            #masa-graph {
+                /*border: 1px solid gray;*/
+                /*height: 650px;*/
+            }
+            #masa-map {
+                /*border: 1px solid gray;*/
+                /*height: 650px;*/
+            }
+            #graph-options {
+                border: 1px solid gray;
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+                grid-template-rows: 1fr 1fr 1fr 1fr;
+                /*height: 100px;*/
+            }
+            #map-options {
+                border: 1px solid gray;
+                /*height: 100px;*/
+            }
+            .masa-check {
+                
+                font-size: 20px;
+                font-family: "Comic Sans MS";
+            }
+            input[type='checkbox'] {
+                -webkit-appearance:none;
+                width:20px;
+                height:20px;
+                background:white;
+                border-radius:5px;
+                border:2px solid #555;
+            }
+            input[type='checkbox']:checked {
+                background: blue;
+            }
+            input[type='checkbox']:focus {
+                outline: 0;
+            }
+        </style>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    </head>
+    <body>
+        <div id="main">
+            <div id="graph-container">
+                <div id="masa-graph"></div>
+                <div id="graph-options">
+                    
+                    <div class="masa-check"><input type="checkbox" name="vehicle1" value="Bike"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle3" value="Boat"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle1" value="Bike"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle3" value="Boat"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle1" value="Bike"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle3" value="Boat"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle1" value="Bike"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle3" value="Boat"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle1" value="Bike"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle3" value="Boat"> Data select</div>
+                    
+                </div>
+            </div>
+            <div id="map-container">
+                <div id="masa-map"></div>
+                <div id="map-options">
+                    Map options or something
+                </div>
+            </div>
+        </div>
+
+        <div id="page-header">
+            <img id="header-logo" src="logo.png">
+            <p id="header-title">Dashboard</p>
+        </div>
+
+        <script>
+            var mymap = L.map('masa-map').setView([38.89, -77.04], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        }).addTo(mymap);
+
+            L.marker([38.88, -77.07]).addTo(mymap).openPopup();
+            L.marker([38.89, -77.01]).addTo(mymap).openPopup();
+            
+            var trace1 = {
+                x: [1, 2, 3, 4, 5, 6, 7, 8],
+                y: [10, 15, null, 17, 14, 12, 10, null, 15],
+                mode: 'lines+markers',
+                connectgaps: true
+            };
+
+            var trace2 = {
+                x: [1, 2, 3, 4, 5, 6, 7, 8],
+                y: [16, null, 13, 10, 8, null, 11, 12],
+                mode: 'lines',
+                connectgaps: true
+            };
+
+            var data = [trace1, trace2];
+
+            var layout = {
+                showlegend: false,
+                margin: {
+                    l: 20,
+                    r: 20,
+                    b: 20,
+                    t: 20,
+                }
+            };
+
+            Plotly.newPlot('masa-graph', data, layout, {displayModeBar: false, staticPlot: true});
+        </script>
+    </body>
+</html>
