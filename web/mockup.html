@@ -4,12 +4,12 @@
         <title>MASA Dashboard</title>
         <style>
             body {
-                background-color: rgba(159,159,170,0.12);
+                background-color: #F2B779;
             }
             #page-header {
                 /*display: block;*/
                 overflow: hidden;
-                background-color: deepskyblue;
+                background-color: #114488;
                 position: fixed;
                 size: fixed;
                 padding: 10px 0 0px 25px;
@@ -18,7 +18,7 @@
                 left: 0;
                 width: 100%;
                 border-bottom: 1px solid gray;
-                z-index: 1000;
+                z-index: 100000;
             }
             #header-logo {
                 float:left;
@@ -27,7 +27,7 @@
             }
             #header-title {
                 position: center;
-                color: black;
+                color: #FFFFEE;
                 font-family: "Comic Sans MS";
                 font-style: italic;
                 font-weight: 700;
@@ -36,6 +36,7 @@
             }
             #main {
                 width: 100%;
+                
                 height: 825px;
                 margin-top: 125px;
                 display: grid;
@@ -53,39 +54,48 @@
                 grid-row-gap: 15px;
             }
             #masa-graph {
-                /*border: 1px solid gray;*/
+                border: 2px solid gray;
                 /*height: 650px;*/
             }
             #masa-map {
-                /*border: 1px solid gray;*/
+                border: 2px solid gray;
                 /*height: 650px;*/
             }
             #graph-options {
-                border: 1px solid gray;
+                border: 2px solid gray;
                 display: grid;
+                background-color: white;
                 grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
                 grid-template-rows: 1fr 1fr 1fr 1fr;
                 /*height: 100px;*/
             }
             #map-options {
-                border: 1px solid gray;
+                border: 2px solid gray;
+                background-color: white;
                 /*height: 100px;*/
             }
             .masa-check {
                 
-                font-size: 20px;
+                font-size: 17px;
                 font-family: "Comic Sans MS";
+                
             }
             input[type='checkbox'] {
                 -webkit-appearance:none;
-                width:20px;
-                height:20px;
-                background:white;
-                border-radius:3px;
+                width:15px;
+                height:15px;
+                background:#FFFFEE;
+                border-radius:2px;
                 border:1px solid #555;
             }
             input[type='checkbox']:checked {
-                background: blue;
+                background: #114488;
+            }
+            input[type='checkbox']:active {
+                width: 14px;
+                height:14px;
+                margin-left: 4px;
+                margin-top: 4px;
             }
             input[type='checkbox']:focus {
                 outline: 0;
@@ -122,8 +132,8 @@
                     <div class="masa-check"><input type="checkbox" name="vehicle1" value="Bike"> Data select</div>
                     <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"> Data select</div>
                     <div class="masa-check"><input type="checkbox" name="vehicle3" value="Boat"> Data select</div>
-                    
-                </div>
+                
+                    </div>
             </div>
             <div id="map-container">
                 <div id="masa-map"></div>
