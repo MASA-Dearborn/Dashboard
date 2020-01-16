@@ -20,9 +20,10 @@ conn = engine.connect()
 def fetch():
     message = request.get_json(force=True)
     name = message['name']
-    response = {
-        'data': 'Hello, ' + name + '!'
-    }
 
-    #
+    response = {}
+    for table in meta.tables:
+        #response[table.]
+        pass
+
     return jsonify(response)

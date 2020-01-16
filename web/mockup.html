@@ -4,12 +4,12 @@
         <title>MASA Dashboard</title>
         <style>
             body {
-                background-color: #F2B779;
+                background-color: #F5F5F5;
             }
             #page-header {
                 /*display: block;*/
                 overflow: hidden;
-                background-color: #114488;
+                background-color: #94352D;
                 position: fixed;
                 size: fixed;
                 padding: 10px 0 0px 25px;
@@ -17,7 +17,7 @@
                 top: 0;
                 left: 0;
                 width: 100%;
-                border-bottom: 1px solid gray;
+                border-bottom: 2px solid #928448;
                 z-index: 100000;
             }
             #header-logo {
@@ -27,22 +27,35 @@
             }
             #header-title {
                 position: center;
-                color: #FFFFEE;
-                font-family: "Comic Sans MS";
+                color: #EACE44;
+                font-family: "Cairo", sans-serif;
                 font-style: italic;
                 font-weight: 700;
-                margin-top: -20px;
+                margin-top: -40px;
                 font-size: 90px;
             }
             #main {
-                width: 100%;
+                
                 
                 height: 825px;
                 margin-top: 125px;
+                margin-left: 8px;
+                margin-right: 8px;
                 display: grid;
                 grid-template-columns: 2fr 1fr;
                 grid-column-gap: 15px;
+                
+                /*
+                transform: rotate(-90deg);
+                transform-origin: right top;*/
             }
+
+            /*
+            #main > div {
+                transform: rotate(90deg);
+                transform-origin: right top;
+            }*/
+            
             #graph-container {
                 display: grid;
                 grid-template-rows: 3fr 1fr;
@@ -54,31 +67,41 @@
                 grid-row-gap: 15px;
             }
             #masa-graph {
-                border: 2px solid gray;
+                border: 2px solid #928448;
+                border-radius:2px;
                 /*height: 650px;*/
             }
             #masa-map {
-                border: 2px solid gray;
+                border: 2px solid #928448;
+                border-radius:2px;
                 /*height: 650px;*/
             }
             #graph-options {
-                border: 2px solid gray;
+                border: 2px solid #928448;
                 display: grid;
                 background-color: white;
-                grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-                grid-template-rows: 1fr 1fr 1fr 1fr;
+                border-radius:2px;
+                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
                 /*height: 100px;*/
             }
             #map-options {
-                border: 2px solid gray;
+                border: 2px solid #928448;
                 background-color: white;
+                border-radius:2px;
                 /*height: 100px;*/
             }
             .masa-check {
-                
+                float: left;
                 font-size: 17px;
-                font-family: "Comic Sans MS";
-                
+                font-family: "Cairo", sans-serif;
+                position: relative;
+            }
+            .masa-check > p {
+                top: -21px;
+                left: 24px;
+                position: absolute;
+                display: inline;
             }
             input[type='checkbox'] {
                 -webkit-appearance:none;
@@ -89,7 +112,7 @@
                 border:1px solid #555;
             }
             input[type='checkbox']:checked {
-                background: #114488;
+                background: #1B2E50;
             }
             input[type='checkbox']:active {
                 width: 14px;
@@ -101,6 +124,8 @@
                 outline: 0;
             }
         </style>
+
+        <link href="https://fonts.googleapis.com/css?family=Cairo&display=swap" rel="stylesheet">
 
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
         <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
@@ -117,23 +142,23 @@
                 <div id="masa-graph"></div>
                 <div id="graph-options">
                     
-                    <div class="masa-check"><input type="checkbox" name="vehicle1" value="Bike"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle3" value="Boat"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle1" value="Bike"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle3" value="Boat"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle1" value="Bike"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle3" value="Boat"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle1" value="Bike"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle3" value="Boat"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle1" value="Bike"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"> Data select</div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle3" value="Boat"> Data select</div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
                 
-                    </div>
+                </div>
             </div>
             <div id="map-container">
                 <div id="masa-map"></div>
