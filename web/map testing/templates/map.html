@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <title>The map!</title>
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}" /><!--Link to the CSS style sheet for the map-->
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+  integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+  crossorigin=""/><!--Leaflet CSS file-->
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+  integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+  crossorigin=""></script><!--Leaflet Javascript file-->
+</head>
+
+<body>
+  <div id="mapid"></div> <!--The actual map element-->
+
+  <!--all of the user inputs. These will be handled by the backend in the final-->
+  <div>LatInt: <input type="text" id="newLatint"></input></div>
+  <div>LatFloat: <input type="text" id="newLatfloat"></input></div>
+  <div>LatChar: <input type="text" id="newLatchar"></input></div>
+  <div>LongInt: <input type="text" id="newLongint"></input></div>
+  <div>LongFloat: <input type="text" id="newLongfloat"></input></div>
+  <div>LongChar: <input type="text" id="newLongchar"></input></div>
+  <input type="button" value="Submit!" onclick="newData()"></input>
+
+
+  <script>
+    var markerPost = [];
+
+    var masaMap = L.map('mapid').setView([32.9903796,-106.975041], 12); //creates the map, centered on
+    //spaceport america
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              }).addTo(masaMap); //The tileset for the map
+
+    L.marker([32.9903796,-106.975041]).addTo(masaMap); //adds the location of
+    //spaceport america to the map
+
+    function newData() {
+      markerPost.push([decMinToDegDec("Lat"), decMinToDegDec("Long")]); //pushes
+      //the data from the user input into a part of the array
+      console.log(markerPost);
+      L.marker(markerPost[markerPost.length-1]).addTo(masaMap); //puts a marker
+      //at the user input location
+    }
+
+    function decMinToDegDec(latOrlong) { //converts degrees decimal minutes (GPS output)
+      //to degrees decimal (map input)
+      var lInt = Number(document.getElementById("new" + latOrlong + "int").value);
+      var lFloat = Number(document.getElementById("new" + latOrlong + "float").value);
+      var lVar = document.getElementById("new" + latOrlong + "char").value;
+      var l;
+
+      l = lInt + (lFloat/60);
+
+      l = l * (lVar == "S" || lVar == "W" ? -1 : 1); //makes the value negative
+      //to indicate which side of the globe the point is on
+
+      console.log(l);
+      return l;
+    }
+
+  </script>
+</body>
+
+</html>
