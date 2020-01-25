@@ -10,8 +10,8 @@ import queue
 class PacketReceiver():
     def __init__(self, port, crc):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.address = (socket.gethostbyname(socket.gethostname()), port)   # Find ip of current computer and assign port
-        #self.address = ("127.0.0.1", 9990)
+        #self.address = (socket.gethostbyname(socket.gethostname()), port)   # Find ip of current computer and assign port
+        self.address = ("127.0.0.1", 9991)
         self.sock.bind(self.address)    # Bind socket to this computer and correct port
 
         self.data = {}  # Create dictionary to store data

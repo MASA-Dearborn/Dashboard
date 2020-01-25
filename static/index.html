@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MASA Dashboard</title>
+        <style>
+            body {
+                background-color: #F5F5F5;
+            }
+            #page-header {
+                /*display: block;*/
+                overflow: hidden;
+                background-color: #94352D;
+                position: fixed;
+                size: fixed;
+                padding: 10px 0 0px 25px;
+                height: 100px;
+                top: 0;
+                left: 0;
+                width: 100%;
+                border-bottom: 2px solid #928448;
+                z-index: 100000;
+            }
+            #header-logo {
+                float:left;
+                margin-right: 20px;
+                height: 90%;
+            }
+            #header-title {
+                position: center;
+                color: #EACE44;
+                font-family: "Cairo", sans-serif;
+                font-style: normal;
+                font-weight: 700;
+                margin-top: -40px;
+                font-size: 90px;
+            }
+            #main {
+                
+                
+                height: 750px;
+                margin-top: 125px;
+                margin-left: 8px;
+                margin-right: 8px;
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                grid-column-gap: 15px;
+                
+                /*
+                transform: rotate(-90deg);
+                transform-origin: right top;*/
+            }
+
+            /*
+            #main > div {
+                transform: rotate(90deg);
+                transform-origin: right top;
+            }*/
+            
+            #graph-container {
+                display: grid;
+                grid-template-rows: 3fr 1fr;
+                grid-row-gap: 15px;
+            }
+            #map-container {
+                display: grid;
+                grid-template-rows: 3fr 1fr;
+                grid-row-gap: 15px;
+            }
+            #masa-graph {
+                border: 2px solid #928448;
+                border-radius:2px;
+                /*height: 650px;*/
+            }
+            #masa-map {
+                border: 2px solid #928448;
+                border-radius:2px;
+                /*height: 650px;*/
+            }
+            #graph-options {
+                border: 2px solid #928448;
+                display: grid;
+                background-color: white;
+                border-radius:2px;
+                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+                /*height: 100px;*/
+            }
+            #map-options {
+                border: 2px solid #928448;
+                background-color: white;
+                border-radius:2px;
+                /*height: 100px;*/
+            }
+            .masa-check {
+                float: left;
+                font-size: 17px;
+                font-family: "Cairo", sans-serif;
+                position: relative;
+            }
+            .masa-check > p {
+                top: -21px;
+                left: 24px;
+                position: absolute;
+                display: inline;
+            }
+            input[type='checkbox'] {
+                -webkit-appearance:none;
+                width:15px;
+                height:15px;
+                background:#FFFFEE;
+                border-radius:2px;
+                border:1px solid #555;
+            }
+            input[type='checkbox']:checked {
+                background: #1B2E50;
+            }
+            input[type='checkbox']:active {
+                width: 14px;
+                height:14px;
+                margin-left: 4px;
+                margin-top: 4px;
+            }
+            input[type='checkbox']:focus {
+                outline: 0;
+            }
+        </style>
+
+        <link href="https://fonts.googleapis.com/css?family=Cairo&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    </head>
+    <body>
+        <div id="page-header">
+            <img id="header-logo" src="logo.png">
+            <p id="header-title">Dashboard</p>
+        </div>
+
+        <div id="main">
+            <div id="graph-container">
+                <div id="masa-graph"></div>
+                <div id="graph-options">
+                    
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
+                
+                </div>
+            </div>
+            <div id="map-container">
+                <div id="masa-map"></div>
+                <div id="map-options">
+                    Map options or something
+                </div>
+            </div>
+        </div>
+
+        <script>
+            
+            var traces = [];
+
+            var layout = {
+                showlegend: false,
+                margin: {
+                    l: 20,
+                    r: 20,
+                    b: 20,
+                    t: 20,
+                }
+            };
+
+            // Fetch configuration info and setup the graph.
+            var config;
+            var configId = $.get("/config", function(response) {
+                    console.log(response);
+                    config = response;
+                    for (const column in config["spoofs"]) {
+                        traces.push({
+                            x: [],
+                            y: [],
+                            mode: 'lines',
+                            connectgaps: true
+                        });
+
+                        var dataSelect = document.createElement("div"); 
+                    }
+                    Plotly.newPlot('masa-graph', traces, layout, {displayModeBar: false, staticPlot: true});
+            });
+
+            var mymap = L.map('masa-map').setView([38.89, -77.04], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        }).addTo(mymap);
+
+            L.marker([38.88, -77.07]).addTo(mymap).openPopup();
+            L.marker([38.89, -77.01]).addTo(mymap).openPopup();
+
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var long = position.coords.longitude;
+                console.log(lat, long)
+                L.marker([lat, long]).addTo(mymap).openPopup();
+            });
+
+            // Query the backend for new data every second and process that data
+            var x = 0;
+            var timerId = setInterval(function(event) {
+                $.get("/fetch", function(response) {
+                    for (var i = 1; i < response["spoofs"].length; i++) {
+                        traces[i].x.push(response["spoofs"][0]);
+                        traces[i].y.push(response["spoofs"][i]);
+                        if (traces[i].x.length > 30) {
+                            traces[i].x.shift();
+                            traces[i].y.shift();
+                        }
+                        console.log(response["spoofs"][i]);
+                        i++;
+                    }
+                    x++;
+
+                    Plotly.redraw('masa-graph');
+                })
+            }, 1000);
+
+        </script>
+    </body>
+</html>

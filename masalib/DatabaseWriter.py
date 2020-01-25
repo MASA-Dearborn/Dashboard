@@ -18,6 +18,8 @@ class SQLiteInterface():
         self.meta.reflect(bind=self.engine)                             # Bind metadata to database engine
         self.conn = self.engine.connect()                               # Create a database engine
 
+        self.counter = 0
+
     def create_table(self, name, columns):
         """
         Creates a new SQL table
@@ -28,7 +30,8 @@ class SQLiteInterface():
         """
 
         try:
-            col = (db.Column(name, self.datatypes[typ]) for name, typ in columns)   # Construct a tuple of Column variables
+            col = tuple([db.Column("id", db.Integer())] + 
+                        [db.Column(name, self.datatypes[typ]) for name, typ in columns])   # Construct a tuple of Column variables
         except KeyError:                                                            # Catch a KeyError if a datatype name doesn't exist
             return None
 
@@ -43,6 +46,9 @@ class SQLiteInterface():
         table_name (str): Name of table to insert data into
         data (dict): Dictionary of data to insert into table
         """
+
+        data["id"] = self.counter
+        self.counter += 1
 
         table = self.meta.tables[table_name]            # Fetch the table variable from the database metadata
         query = db.insert(table)                        # Create an insert query
