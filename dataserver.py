@@ -72,10 +72,14 @@ def main():
             for column in columns:
                 if columns[column] == "int":        # If the config marks column as int, convert to int
                     value = convert_bytelist_to_int(data[data_index:data_index+4])
+                    data_index += 4
                 elif columns[column] == "float":    # If the config marks column as float, convert to float
                     value = convert_bytelist_to_float(data[data_index:data_index+4])
+                    data_index += 4
+                elif columns[column] == "char":
+                    value = 0
+                    data_index += 1
                 
-                data_index += 4                     # Increment to next full value
                 processed_columns[column] = value   # Store the processed value in the data dictionary
 
             database.insert(table, processed_columns) # Insert the data into the database table

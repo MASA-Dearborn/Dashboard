@@ -34,6 +34,18 @@
                 margin-top: -40px;
                 font-size: 90px;
             }
+            #color-select {
+                height: 100%;
+                width: 32px;
+                position: absolute;
+                display: grid;
+                float: right;
+                right: 0;
+                top: 0;
+                grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+                background-color: white;
+                border-left: 1px solid #928448;
+            }
             #main {
                 
                 
@@ -44,17 +56,7 @@
                 display: grid;
                 grid-template-columns: 2fr 1fr;
                 grid-column-gap: 15px;
-                
-                /*
-                transform: rotate(-90deg);
-                transform-origin: right top;*/
             }
-
-            /*
-            #main > div {
-                transform: rotate(90deg);
-                transform-origin: right top;
-            }*/
             
             #graph-container {
                 display: grid;
@@ -124,7 +126,7 @@
                 outline: 0;
             }
         </style>
-
+        
         <link href="https://fonts.googleapis.com/css?family=Cairo&display=swap" rel="stylesheet">
 
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
@@ -136,30 +138,19 @@
         <div id="page-header">
             <img id="header-logo" src="logo.png">
             <p id="header-title">Dashboard</p>
+            <div id="color-select">
+                <div class="color-option" style="background-color: #94352D" onclick="recolorHeader(this)"></div>
+                <div class="color-option" style="background-color: #2CA9AA" onclick="recolorHeader(this)"></div>
+                <div class="color-option" style="background-color: #EF8E18" onclick="recolorHeader(this)"></div>
+                <div class="color-option" style="background-color: #2D382A" onclick="recolorHeader(this)"></div>
+                <div class="color-option" style="background-color: #C6644D" onclick="recolorHeader(this)"></div>
+            </div>
         </div>
 
         <div id="main">
             <div id="graph-container">
                 <div id="masa-graph"></div>
-                <div id="graph-options">
-                    
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                    <div class="masa-check"><input type="checkbox" name="vehicle2" value="Car"><p>Data select</p></div>
-                
-                </div>
+                <div id="graph-options"></div>
             </div>
             <div id="map-container">
                 <div id="masa-map"></div>
@@ -171,7 +162,15 @@
 
         <script>
             
-            var traces = [];
+            var allTraces = [];
+            var selectedTraces = [];
+            var mymap = L.map('masa-map');
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        }).addTo(mymap);
+
+            var userPositionMarker = L.marker([0, 0]).addTo(mymap).openPopup();
 
             var layout = {
                 showlegend: false,
@@ -183,59 +182,80 @@
                 }
             };
 
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    userPositionMarker.setLatLng([position.coords.latitude, position.coords.longitude]);
+                    mymap.setView([position.coords.latitude, position.coords.longitude], 13);
+                });
+            } else {
+                mymap.setView([0, 0], 13);
+            }
+
             // Fetch configuration info and setup the graph.
             var config;
             var configId = $.get("/config", function(response) {
-                    console.log(response);
-                    config = response;
-                    for (const column in config["spoofs"]) {
-                        traces.push({
-                            x: [],
-                            y: [],
-                            mode: 'lines',
-                            connectgaps: true
-                        });
+                console.log(response);
+                config = response;
+                for (const column in config["spoofs"]["columns"]) {
+                    allTraces.push({
+                        x: [],
+                        y: [],
+                        mode: 'lines',
+                        connectgaps: true
+                    });
+                    
+                    var dataSelect = document.createElement("div"); 
+                    dataSelect.className = "masa-check";
+                    var check = document.createElement("input");
+                    var label = document.createElement("p");
+                    check.type = "checkbox";
+                    check.id = "check" + column;
+                    check.onclick = selectActiveTraces;
+                    label.innerText = column;
+                    dataSelect.appendChild(check);
+                    dataSelect.appendChild(label);
+                    document.getElementById("graph-options").appendChild(dataSelect);
+                }
 
-                        var dataSelect = document.createElement("div"); 
+                Plotly.newPlot('masa-graph', allTraces, layout, {displayModeBar: false, staticPlot: true});
+            });
+
+            function selectActiveTraces() {
+                var graphOptions = document.getElementById("graph-options");
+                selectedTraces = [];
+                var i = 1;
+                for (const column in config["spoofs"]["columns"]) {
+                    if (document.getElementById("check" + column).checked) {
+                        selectedTraces.push(allTraces[i]);
                     }
-                    Plotly.newPlot('masa-graph', traces, layout, {displayModeBar: false, staticPlot: true});
-            });
+                    i++;
+                }
+            }
 
-            var mymap = L.map('masa-map').setView([38.89, -77.04], 13);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        }).addTo(mymap);
-
-            L.marker([38.88, -77.07]).addTo(mymap).openPopup();
-            L.marker([38.89, -77.01]).addTo(mymap).openPopup();
-
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var lat = position.coords.latitude;
-                var long = position.coords.longitude;
-                console.log(lat, long)
-                L.marker([lat, long]).addTo(mymap).openPopup();
-            });
+            function recolorHeader(element) {
+                document.getElementById("page-header").style.backgroundColor = element.style.backgroundColor;
+                document.getElementById("page-header").style.color = element.style.color;
+            }
 
             // Query the backend for new data every second and process that data
-            var x = 0;
             var timerId = setInterval(function(event) {
                 $.get("/fetch", function(response) {
-                    for (var i = 1; i < response["spoofs"].length; i++) {
-                        traces[i].x.push(response["spoofs"][0]);
-                        traces[i].y.push(response["spoofs"][i]);
-                        if (traces[i].x.length > 30) {
-                            traces[i].x.shift();
-                            traces[i].y.shift();
+                    for (var i = 0; i < response["spoofs"].length - 1; i++) {
+                        allTraces[i].x.push(response["spoofs"][0]);
+                        allTraces[i].y.push(response["spoofs"][i + 1]);
+                        if (allTraces[i].x.length > 30) {
+                            allTraces[i].x.shift();
+                            allTraces[i].y.shift();
                         }
-                        console.log(response["spoofs"][i]);
-                        i++;
                     }
-                    x++;
 
                     Plotly.redraw('masa-graph');
                 })
             }, 1000);
+
+            var positionTimerId = setInterval(navigator.geolocation.getCurrentPosition(function(position) {
+                userPositionMarker.setLatLng([position.coords.latitude, position.coords.longitude]);
+            }), 5000);
 
         </script>
     </body>

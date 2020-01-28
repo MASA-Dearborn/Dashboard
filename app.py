@@ -10,21 +10,8 @@ from flask import Flask
 
 from flask_cors import CORS, cross_origin
 
-
 app = Flask(__name__)
 cors = CORS(app, resources={r"/foo": {"origins": "http://localhost:port"}})
-
-#conn = sqlite3.connect("test_database.db")
-
-"""
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test_database.db'
-db = SQLAlchemy(app)
-
-engine = db.create_engine("sqlite:///test_database.db")
-meta = db.MetaData()
-meta.reflect(bind=engine)
-conn = engine.connect()
-"""
 
 tables_list = {}
 
@@ -48,9 +35,6 @@ def fetch():
             c.execute("SELECT * FROM " + table + " ORDER BY id DESC LIMIT 1;")
             response[table] = list(c.fetchone())
         
-        #query = meta.tables[table].select().order_by(meta.tables[table].c.id.desc()).limit(1)
-        #response[table] = conn.execute(query).fetchall()[0]
-
     return jsonify(response)
 
 if __name__ == "__main__":
@@ -66,3 +50,4 @@ if __name__ == "__main__":
     tables_list = config["tables"]
 
     app.run(host=config["ip"], port='5000', debug=True, threaded=True)
+    
