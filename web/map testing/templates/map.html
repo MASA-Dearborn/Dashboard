@@ -4,7 +4,12 @@
 <head>
   <title>The map!</title>
 
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}" /><!--Link to the CSS style sheet for the map-->
+  <style>
+    #mapid { /*the height and width of the map*/
+      height: 350px;
+      width: 350px;
+      }
+  </style>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
@@ -28,7 +33,23 @@
 
 
   <script>
-    var markerPost = [];
+    var rocketIcons = L.Icon.extend({
+      options: {
+      shadowUrl: 'mapMarkers/shadow.png',
+      iconSize:     [33, 45], // size of the icon
+      shadowSize:   [44, 16], // size of the shadow
+      iconAnchor:   [16, 45], // point of the icon which will correspond to marker's location
+      shadowAnchor: [21, 10],  // the same for the shadow
+      }
+    });
+
+    var blueIcon = new rocketIcons({iconUrl:'mapMarkers/blueMarker.png'}),
+    yellowIcon = new rocketIcons({iconUrl:'mapMarkers/yellowMarker.png'}),
+    personIcon = new rocketIcons({iconUrl:'mapMarkers/personMarker.png', iconAnchor: [16, 41]});
+    //the actual icons, defines the picture url and moves the anchor for the person version
+    //to make it fit
+
+    var markerPost = []; //array of the markers
 
     var masaMap = L.map('mapid').setView([32.9903796,-106.975041], 12); //creates the map, centered on
     //spaceport america
@@ -37,9 +58,11 @@
                 {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               }).addTo(masaMap); //The tileset for the map
 
-    markerPost.push(L.marker([32.9903796,-106.975041]));
+    markerPost.push(L.marker([32.9903796,-106.975041], {icon:personIcon}));
     markerPost[0].addTo(masaMap); //adds the location of
     //spaceport america to the map
+    markerPost.push(L.marker([32.94293,-106.915053], {icon:yellowIcon}));
+    markerPost[1].addTo(masaMap); //adds a rocket data point to the map
 
     function newData() {
       markerPost.push(L.marker([decMinToDegDec("Lat"), decMinToDegDec("Long")])); //pushes
