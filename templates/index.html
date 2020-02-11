@@ -34,6 +34,23 @@
                 margin-top: -40px;
                 font-size: 90px;
             }
+            #swap-button {
+                width: 50px;
+                height: 50px;
+                position: absolute;
+                float: right;
+                right: 60px;
+                top: 30px;
+                background-color: darkgray;
+                border-radius: 4px;
+                border: 2px solid white;
+            }
+            #swap-button:active {
+                right: 62px;
+                top: 32px;
+                width: 46px;
+                height: 46px;
+            }
             #color-select {
                 height: 100%;
                 width: 32px;
@@ -47,8 +64,6 @@
                 border-left: 1px solid #928448;
             }
             #main {
-                
-                
                 height: 750px;
                 margin-top: 125px;
                 margin-left: 8px;
@@ -57,7 +72,16 @@
                 grid-template-columns: 2fr 1fr;
                 grid-column-gap: 15px;
             }
-            
+            .function-container {
+                border: 2px solid #928448;
+                border-radius:2px;
+                background-color: white;
+            }
+            #alt-container {
+                display: grid;
+                grid-template-rows: 3fr 2fr;
+                grid-row-gap: 15px;
+            }
             #graph-container {
                 display: grid;
                 grid-template-rows: 3fr 1fr;
@@ -65,13 +89,23 @@
             }
             #map-container {
                 display: grid;
-                grid-template-rows: 3fr 1fr;
-                grid-row-gap: 15px;
+                grid-template-columns: 4fr 1fr;
+                grid-column-gap: 15px;
+            }
+            #video-container {
+                /*border: 2px solid #928448;
+                border-radius: 2px;
+                background-color: white;*/
+                width: 100%;
+                height: 100%;
+                
             }
             #masa-graph {
-                border: 2px solid #928448;
+                /*border: 2px solid #928448;
                 border-radius:2px;
-                /*height: 650px;*/
+                background-color: white;*/
+                width: 100%;
+                height: 100%;
             }
             #masa-map {
                 border: 2px solid #928448;
@@ -136,59 +170,75 @@
     </head>
     <body>
         <div id="page-header">
-            <img id="header-logo" src="logo.png">
+            <img id="header-logo" src="/static/logo.png">
             <p id="header-title">Dashboard</p>
+            <div id="swap-button" onclick="swapGraphVideo();"></div>
             <div id="color-select">
                 <div class="color-option" style="background-color: #94352D" onclick="recolorHeader(this)"></div>
                 <div class="color-option" style="background-color: #2CA9AA" onclick="recolorHeader(this)"></div>
                 <div class="color-option" style="background-color: #EF8E18" onclick="recolorHeader(this)"></div>
-                <div class="color-option" style="background-color: #2D382A" onclick="recolorHeader(this)"></div>
+                <!--<div class="color-option" style="background-color: #2D382A" onclick="recolorHeader(this)"></div>-->
+                <div class="color-option" style="background-color: gray" onclick="recolorHeader(this)"></div>
                 <div class="color-option" style="background-color: #C6644D" onclick="recolorHeader(this)"></div>
             </div>
         </div>
 
         <div id="main">
             <div id="graph-container">
-                <div id="masa-graph"></div>
+                <div id="primary-function-container" class="function-container">
+                    <div id="masa-graph"></div>
+                </div>
                 <div id="graph-options"></div>
             </div>
-            <div id="map-container">
-                <div id="masa-map"></div>
-                <div id="map-options">
-                    Map options or something
+            <div id="alt-container">
+                <div id="map-container">
+                    <div id="masa-map"></div>
+                    
+                    <div id="map-options">
+                        
+                    </div>
+                </div>
+                <div id="secondary-function-container" class="function-container">
+                    <div id="video-container">
+                        <img id="video-tag" style="width: 100%; height: 100%" src="{{ url_for('video_feed') }}">
+                    </div>
                 </div>
             </div>
         </div>
 
-        <script>
+        <script type="application/javascript">
             
-            var allTraces = [];
-            var selectedTraces = [];
-            var mymap = L.map('masa-map');
+            var traces = {
+                allTraces: [], // Stores a list of trace objects equal in length to the number of columns
+                selectedTraces: [], // Stores a list of trace objects equal in length to the selected
+                selectedPointers: {} // Stores a list of integer pointers to where a specific trace is stored in selectedTraces, -1 if not selected
+            }
+
+            var mymap = L.map('masa-map'); // Main map opject
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        }).addTo(mymap);
+                        }).addTo(mymap); // Initialize the tile layer
 
-            var userPositionMarker = L.marker([0, 0]).addTo(mymap).openPopup();
+            var userPositionMarker = L.marker([0, 0]).addTo(mymap).openPopup(); // Marker for the position of the user
 
-            var layout = {
+            var layout = { // Plotly layout object
                 showlegend: false,
                 margin: {
                     l: 20,
                     r: 20,
                     b: 20,
                     t: 20,
-                }
+                },
+                autosize: true
             };
 
-            if (navigator.geolocation) {
+            mymap.setView([0, 0], 13);
+            if (navigator.geolocation) { // If geolocation is available in browser, set map's focal point to current position
                 navigator.geolocation.getCurrentPosition(function(position) {
                     userPositionMarker.setLatLng([position.coords.latitude, position.coords.longitude]);
                     mymap.setView([position.coords.latitude, position.coords.longitude], 13);
                 });
-            } else {
-                mymap.setView([0, 0], 13);
             }
 
             // Fetch configuration info and setup the graph.
@@ -196,40 +246,59 @@
             var configId = $.get("/config", function(response) {
                 console.log(response);
                 config = response;
+                
+                var count = 0;
                 for (const column in config["spoofs"]["columns"]) {
-                    allTraces.push({
+                    traces.allTraces.push({
                         x: [],
                         y: [],
                         mode: 'lines',
                         connectgaps: true
                     });
+                    traces.selectedTraces.push({
+                        x: [],
+                        y: [],
+                        mode: 'lines',
+                        connectgaps: true
+                    });
+                    traces.selectedPointers[column] = count;
                     
+                    // Construct a checkbox component
+                    // <div class="masa-check"><input type="checkbox"><p>Checkbox label</p></div>
                     var dataSelect = document.createElement("div"); 
                     dataSelect.className = "masa-check";
                     var check = document.createElement("input");
                     var label = document.createElement("p");
                     check.type = "checkbox";
-                    check.id = "check" + column;
-                    check.onclick = selectActiveTraces;
+                    //check.id = "check" + column;
+                    check.name = column;
+                    check.setAttribute('onclick',  'toggleActiveTrace(this);')
                     label.innerText = column;
                     dataSelect.appendChild(check);
                     dataSelect.appendChild(label);
                     document.getElementById("graph-options").appendChild(dataSelect);
+
+                    count++;
                 }
 
-                Plotly.newPlot('masa-graph', allTraces, layout, {displayModeBar: false, staticPlot: true});
+                Plotly.newPlot('masa-graph', traces.allTraces, layout, {displayModeBar: false, staticPlot: true, responsive: true});
             });
 
-            function selectActiveTraces() {
-                var graphOptions = document.getElementById("graph-options");
-                selectedTraces = [];
-                var i = 1;
-                for (const column in config["spoofs"]["columns"]) {
-                    if (document.getElementById("check" + column).checked) {
-                        selectedTraces.push(allTraces[i]);
-                    }
-                    i++;
+            function toggleActiveTrace(id) {
+                console.log(traces, id.name);
+
+                if (traces.selectedPointers[id.name][1] == -1) {
+                    traces.selectedTraces[traces.selectedPointers[id.name]] = traces.allTraces[traces.selectedPointers[id.name]];
+                } else {
+                    traces.selectedTraces[traces.selectedPointers[id.name]] = {
+                        x: [],
+                        y: [],
+                        mode: 'lines',
+                        connectgaps: true
+                    };
                 }
+
+                Plotly.redraw('masa-graph');
             }
 
             function recolorHeader(element) {
@@ -237,21 +306,50 @@
                 document.getElementById("page-header").style.color = element.style.color;
             }
 
+            function swapGraphVideo() {
+                var mainFunction = document.getElementById("primary-function-container");
+                var secondaryFunction = document.getElementById("secondary-function-container");
+
+                mainFunction.appendChild(secondaryFunction.childNodes[0]);
+                secondaryFunction.appendChild(mainFunction.childNodes[0]);
+
+                Plotly.update('masa-graph');
+            }
+
+            /*
+            function random_rgba() {
+                var o = Math.round, r = Math.random, s = 255;
+                return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
+            }
+
+            setInterval(function (event) {
+                document.getElementById("page-header").style.backgroundColor = random_rgba();
+            }, 1000 / 10);*/
+            
+
             // Query the backend for new data every second and process that data
             var timerId = setInterval(function(event) {
                 $.get("/fetch", function(response) {
                     for (var i = 0; i < response["spoofs"].length - 1; i++) {
-                        allTraces[i].x.push(response["spoofs"][0]);
-                        allTraces[i].y.push(response["spoofs"][i + 1]);
-                        if (allTraces[i].x.length > 30) {
-                            allTraces[i].x.shift();
-                            allTraces[i].y.shift();
+                        traces.allTraces[i].x.push(response["spoofs"][0]);
+                        traces.allTraces[i].y.push(response["spoofs"][i + 1]);
+                        if (traces.allTraces[i].x.length > 30) {
+                            traces.allTraces[i].x.shift();
+                            traces.allTraces[i].y.shift();
                         }
                     }
 
                     Plotly.redraw('masa-graph');
                 })
             }, 1000);
+
+            // Query the backend for a new frame every second
+            /*
+            var videoId = setInterval(function(event) {
+                $.get("/video", function(response) {
+                    document.getElementById("video-tag").src = response;
+                })
+            }, 1000);*/
 
             var positionTimerId = setInterval(navigator.geolocation.getCurrentPosition(function(position) {
                 userPositionMarker.setLatLng([position.coords.latitude, position.coords.longitude]);

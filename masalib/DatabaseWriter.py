@@ -3,6 +3,7 @@
 import sqlite3
 import sqlalchemy as db
 import os
+import time
 
 class SQLiteInterface():
     datatypes = {"int": db.Integer(),
@@ -47,8 +48,8 @@ class SQLiteInterface():
         data (dict): Dictionary of data to insert into table
         """
 
-        data["id"] = self.counter
-        self.counter += 1
+        data["id"] = int(round(time.time() * 1000))
+        #self.counter += 1
 
         table = self.meta.tables[table_name]            # Fetch the table variable from the database metadata
         query = db.insert(table)                        # Create an insert query
