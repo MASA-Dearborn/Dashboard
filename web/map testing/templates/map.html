@@ -22,6 +22,8 @@
 <body>
   <div id="mapid"></div> <!--The actual map element-->
 
+  <h>Blue is the dart, yellow is the booster</h> <!--Label for the map-->
+
   <!--all of the user inputs. These will be handled by the backend in the final-->
   <div>LatInt: <input type="text" id="newLatint"></input></div>
   <div>LatFloat: <input type="text" id="newLatfloat"></input></div>
@@ -29,8 +31,11 @@
   <div>LongInt: <input type="text" id="newLongint"></input></div>
   <div>LongFloat: <input type="text" id="newLongfloat"></input></div>
   <div>LongChar: <input type="text" id="newLongchar"></input></div>
+  <div>Array: <input type="text" id="dataLocation"></input></div>
   <input type="button" value="Submit!" onclick="newData()"></input>
 
+  <!--<button value="Toggle Dart Markers" onclick="toggleDart"></input>
+  <button value="Toggle Booster Markers" onclick="toggleBooster"></input>-->
 
   <script>
     var rocketIcons = L.Icon.extend({
@@ -49,27 +54,38 @@
     //the actual icons, defines the picture url and moves the anchor for the person version
     //to make it fit
 
-    var markerPost = []; //array of the markers
+    var dartMarkers = [];
+    var boosterMarkers = [];
+    var miscMarkers = [];
 
-    var masaMap = L.map('mapid').setView([32.9903796,-106.975041], 12); //creates the map, centered on
+    var masaMap = L.map('mapid').setView([32.9903796,-106.975041], 13); //creates the map, centered on
     //spaceport america
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               }).addTo(masaMap); //The tileset for the map
 
-    markerPost.push(L.marker([32.9903796,-106.975041], {icon:personIcon}));
-    markerPost[0].addTo(masaMap); //adds the location of
+    miscMarkers.push(L.marker([32.9903796,-106.975041], {icon:personIcon}));
+    miscMarkers[0].addTo(masaMap); //adds the location of
     //spaceport america to the map
-    markerPost.push(L.marker([32.94293,-106.915053], {icon:blueIcon}));
-    markerPost[1].addTo(masaMap); //adds a rocket data point to the map
+//    dartMarkers.push(L.marker([32.94293,-106.915053], {icon:blueIcon}));
+//    dartMarkers[0].addTo(masaMap); //adds a rocket data point to the map
 
     function newData() {
-      markerPost.push(L.marker([decMinToDegDec("Lat"), decMinToDegDec("Long")])); //pushes
-      //the data from the user input into a part of the array
-      console.log(markerPost);
-      markerPost[markerPost.length - 1].addTo(masaMap); //puts a marker
-      //at the user input location
+      if (document.getElementById("dataLocation").value == "Booster") {
+        boosterMarkers.push(L.marker([decMinToDegDec("Lat"), decMinToDegDec("Long")], {icon:yellowIcon})); //pushes
+        //the data from the user input into the booster marker array
+        console.log(boosterMarkers);
+        boosterMarkers[boosterMarkers.length - 1].addTo(masaMap); //puts a marker
+        //at the user input location
+      }
+      else if (document.getElementById("dataLocation").value == "Dart") {
+        dartMarkers.push(L.marker([decMinToDegDec("Lat"), decMinToDegDec("Long")], {icon:blueIcon})); //pushes
+        //the data from the user input into the booster marker array
+        console.log(dartMarkers);
+        dartMarkers[dartMarkers.length - 1].addTo(masaMap); //puts a marker
+        //at the user input location
+      }
     }
 
     function decMinToDegDec(latOrlong) { //converts degrees decimal minutes (GPS output)
