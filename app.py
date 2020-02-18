@@ -105,9 +105,9 @@ def fetch():
         
     return jsonify(response)
 
-@app.route('/video_feed')
+@app.route('/video')
 @cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
-def video_feed():
+def video():
     return Response(generate_frame(),
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
 

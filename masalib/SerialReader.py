@@ -4,6 +4,7 @@ import serial
 import threading
 import struct
 import queue
+import crcmod
 
 class SerialReader():
     def __init__(self, port, speed, header_byte):
@@ -146,10 +147,34 @@ class EggFinderSerialReader(SerialReader):
             self.current_string += next_char
             
 
+class VideoSerialReader(SerialReader):
+    def __init__(self, port, speed, header_byte):
+        self.current_list = []
+        self.previous_list = []
+        self.length = 0
 
+        super().__init__(self, port, speed, header_byte)
 
+    def read(self):
+        """The main processing loop for the VideoSerialReader."""
+        while True:
+            current_byte = int(self.ser.read())
 
+            if current_byte = 127 and len(self.current_list) >= self.length:
+                self.previous_list = self.current_list[:]
+                self.current_list = []
+
+                if len(self.previous_list) = self.length:
+                    # Compute crc
+
+                    self.packet_queue.append(np.array([np.array([i]) for i in self.previous_list[5:-4]]))
+
+                length = self.ser.read(size=4)
+                self.length = struct.unpack(">I", length)
+
+                self.current_list.append(current_byte)
+                self.current_list += list(length)
             
+            #self.current_list.append(current_byte)
+            #self.current_list.append(self.ser.read())
             
-
-
