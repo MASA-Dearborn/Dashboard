@@ -51,6 +51,11 @@ def TeleGPStranslation(input):
                     #   output[11] - latitude
                     #   output[12] - longitude
                     #   output[13:19] - date and time
+                    #   output[20:22] - pdop, hdop, vdop (dilutions of precision)
+                    #   output[23] - GPS Mode
+                    #   output[24] - Ground Speed in cm/s
+                    #   output[25] - Climb Rate in cm/s
+                    #   output[26] - Course/2
 
                     #GPS Flags (output 5 through 9)
                     output.append(int(f'{int(input[18:20],16):08b}'[:4], 2))
@@ -71,6 +76,17 @@ def TeleGPStranslation(input):
                     output.append(int(input[46:48], 16))
                     output.append(int(input[48:50], 16))
                     output.append(int(input[50:52], 16))
+
+                    #pdop, hdop, vdop (outputs 20 through 22)
+                    output.append(int(input[52:54], 16))
+                    output.append(int(input[54:56], 16))
+                    output.append(int(input[56:58], 16))
+
+                    #GPS Mode, ground speed, climb rate, course (output 23 through 26)
+                    output.append(int(input[58:60], 16))
+                    output.append(int(input[62:64] + input[60:62], 16))
+                    output.append(int(input[66:68] + input[64:66], 16))
+                    output.append(int(input[68:70], 16))
 
                 elif output[3] == 6: #if true, the packet is a GPS Satellite packet
                     print('GPS Satellite packet')
