@@ -1,4 +1,4 @@
-exe = "TELEM 220710a6d40520efff0000000000000000ec010b172214e7e7e7010000000000ff4285bf"
+exe = "TELEM 220710c7e7042501000117005c0000c0074b45384e494a0000312e382e36000000648b17"
 #a line from the recorded data from the GPS testing, will be replaced by the
 #serial input in the final
 
@@ -45,7 +45,30 @@ def TeleGPStranslation(input):
                 #   output[3] - packet type
                 #   output[4] - recieved signal stregth indicator
 
-                if output[3] == 5: #if true, the packet is a GPS location packet
+                if output[3] == 4: #if true, the packet is configuration data
+                    #   output[5] - device type
+                    #   output[6] - flight number
+                    #   output[7:8] - config major version, config minor version
+                    #   output[9] - maximum flight log size in kB
+                    #   output[10] - HAM callsign
+                    #   output[11] - software version idenifier
+
+                    #device type (37 from testing), flight number (output 5 and 6)
+                    output.append(int(input[18:20], 16))
+                    output.append(int(input[22:24] + input[20:22], 16))
+
+                    #config major version, config minor version (output 7 and 8)
+                    output.append(int(input[24:26], 16))
+                    output.append(int(input[26:28], 16))
+
+                    #maximum flight log size in kB (output 9)
+                    output.append(int(input[38:40] + input[36:38], 16))
+
+                    #HAM callsign and software version identifier (output 10 and 11)
+                    output.append(bytes.fromhex(input[40:56]).decode('utf-8'))
+                    output.append(bytes.fromhex(input[56:72]).decode('utf-8'))
+
+                elif output[3] == 5: #if true, the packet is a GPS location packet
                     #   output[5:9] - GPS Flags
                     #   output[10] - approx. altitutde in m
                     #   output[11] - latitude
@@ -64,7 +87,7 @@ def TeleGPStranslation(input):
                     output.append(int(f'{int(input[18:20],16):08b}'[6:7]))
                     output.append(int(f'{int(input[18:20],16):08b}'[7:]))
 
-                    #approximate altitude, latitude, longitude (output 10 throuh 12)
+                    #approximate altitude, latitude, longitude (output 10 through 12)
                     output.append(int(input[22:24] + input[20:22], 16))
                     output.append(input[24:32])
                     output.append(input[32:40])
@@ -91,24 +114,21 @@ def TeleGPStranslation(input):
                 elif output[3] == 6: #if true, the packet is a GPS Satellite packet
                     print('GPS Satellite packet')
 
-                elif output[3] == 4: #if true, the packet is configuration data
-                    print('Configuration data')
-
                 else: #packet has bad packet type, discard
                     print('error, incorrect packet type')
                     return None
 
                 return output[0:]
 
-            else:
+            else: #packet does not have a valid CRC value
                 print('error, improper CRC')
                 return None
 
-        else:
+        else: #packet does not have the correct checksum so data has been lost
             print('error, wrong checksum, data lost')
             return None
 
-    else:
+    else: #packet lacks the TELEM start string
         print("improper string, no start code")
         return None
 
