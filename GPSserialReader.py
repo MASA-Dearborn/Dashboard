@@ -1,4 +1,4 @@
-exe = "TELEM 220710c7e7042501000117005c0000c0074b45384e494a0000312e382e36000000648b17"
+exe = "TELEM 2207107be3060000000000000000000000000000000000000000000000000000ff6289bf"
 #a line from the recorded data from the GPS testing, will be replaced by the
 #serial input in the final
 
@@ -65,8 +65,8 @@ def TeleGPStranslation(input):
                     output.append(int(input[38:40] + input[36:38], 16))
 
                     #HAM callsign and software version identifier (output 10 and 11)
-                    output.append(bytes.fromhex(input[40:56]).decode('utf-8'))
-                    output.append(bytes.fromhex(input[56:72]).decode('utf-8'))
+                    output.append(str(bytes.fromhex(input[40:56]).decode('utf-8')).replace("\x00", ""))
+                    output.append(str(bytes.fromhex(input[56:72]).decode('utf-8')).replace("\x00", ""))
 
                 elif output[3] == 5: #if true, the packet is a GPS location packet
                     #   output[5:9] - GPS Flags
@@ -112,7 +112,10 @@ def TeleGPStranslation(input):
                     output.append(int(input[68:70], 16))
 
                 elif output[3] == 6: #if true, the packet is a GPS Satellite packet
-                    print('GPS Satellite packet')
+                    #   output[5] - number of reported satellite info
+
+                    #number of reported satellite info (output 5)
+                    output.append(int(input[18:20], 16))
 
                 else: #packet has bad packet type, discard
                     print('error, incorrect packet type')
