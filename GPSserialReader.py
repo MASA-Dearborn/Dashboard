@@ -1,6 +1,7 @@
-exe = ["TELEM 2207107be3060000000000000000000000000000000000000000000000000000ff6289bf"]
-#a line from the recorded data from the GPS testing, will be replaced by the
-#serial input in the final
+import serial #imports pyserial for use in the program
+
+serialOne = serial.Serial('COM3', 9600, timeout=1) #opens up a serial line at COM3
+# with a timeout of 1 second and a baud of 9600
 
 def checkSum(input):
     #takes an input of raw teleGPS data and calculates what the value of the
@@ -144,6 +145,18 @@ def TeleGPStranslation(input):
         print("improper string, no start code")
         return None
 
+def testTranslation(input):
+    #translates the test code from the arduino
+
+    output = []
+
+    transIter = 1 #creates an iteration to break up the numbers
+    while transIter < 23:
+        output.append(input[transIter:transIter+2])
+        transIter += 2
+
+    return output[0:]
+
 def CSVsave(fileName, data):
     #takes the data (given in a python array) and saves it to a CSV file with the
     #file name given
@@ -163,7 +176,20 @@ def CSVsave(fileName, data):
     file.close() #close the file
 
 if __name__ == '__main__': #the main loop -> cancel the script with ctrl + C
-    print(exe)
-    CSVsave("rawLog1", exe)
-    print(TeleGPStranslation(exe[0]))
-    CSVsave("translatedLog1", TeleGPStranslation(exe[0]))
+
+    print(serialOne.readline()) #primes the readline to work-- for some reason
+    #the readline always starts with a junk line but this simply prints that line
+
+    queue = [] #creates a test queue for the incoming data
+
+    serialIter = 0 #creates a loop value for the serial data
+    while serialIter < 15:
+
+        #translates the data and addes it to the queue
+        recieved = str(serialOne.readline()).replace("\\r\\n", "").replace("b", "")
+        queue.append(testTranslation(recieved))
+
+        #saves the data to the test.csv file
+        CSVsave("test", queue.pop(0))
+        
+        serialIter += 1
