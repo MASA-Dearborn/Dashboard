@@ -1,4 +1,4 @@
-exe = "TELEM 2207107be3060000000000000000000000000000000000000000000000000000ff6289bf"
+exe = ["TELEM 2207107be3060000000000000000000000000000000000000000000000000000ff6289bf"]
 #a line from the recorded data from the GPS testing, will be replaced by the
 #serial input in the final
 
@@ -113,9 +113,18 @@ def TeleGPStranslation(input):
 
                 elif output[3] == 6: #if true, the packet is a GPS Satellite packet
                     #   output[5] - number of reported satellite info
+                    #   output[6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28] - space vehicle identifier
+                    #   output[7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29] - C/N1 signal quality indicator
 
                     #number of reported satellite info (output 5)
                     output.append(int(input[18:20], 16))
+
+                    #space vehicle identifiers and C/N1 signal quality inidcators (output[6:29])
+                    transIter = 0 #creates an iteration value for the satellite data loop
+                    while transIter < 12:
+                        output.append(int(input[20+2*transIter:22+2*transIter], 16)) #space vehicle identifier
+                        output.append(int(input[22+2*transIter:24+2*transIter], 16)) #C/N1 signal quality indicator
+                        transIter += 1
 
                 else: #packet has bad packet type, discard
                     print('error, incorrect packet type')
@@ -135,5 +144,26 @@ def TeleGPStranslation(input):
         print("improper string, no start code")
         return None
 
-if __name__ == '__main__':
-    print(TeleGPStranslation(exe))
+def CSVsave(fileName, data):
+    #takes the data (given in a python array) and saves it to a CSV file with the
+    #file name given
+
+    file = open(fileName + ".csv", "a") #open and write to a file the data
+
+    CSVIter = 1 #creates an iteration value for the data
+
+    while CSVIter <= len(data): #iterate through the data and add it to a line of the
+    #CSV file
+        file.write(str(data[CSVIter - 1]))
+        if CSVIter < len(data): #makes sure that the last data is not followed by a ','
+            file.write(",")
+        CSVIter += 1
+
+    file.write("\n") #add a new line to the CSV file
+    file.close() #close the file
+
+if __name__ == '__main__': #the main loop -> cancel the script with ctrl + C
+    print(exe)
+    CSVsave("rawLog1", exe)
+    print(TeleGPStranslation(exe[0]))
+    CSVsave("translatedLog1", TeleGPStranslation(exe[0]))
