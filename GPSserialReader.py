@@ -1,6 +1,8 @@
 import serial #imports pyserial for use in the program
 
-serialOne = serial.Serial('COM3', 9600, timeout=1) #opens up a serial line at COM3
+portOne = input("Input Port of device:") #asks for the port of the serial device
+
+serialOne = serial.Serial(portOne, 9600, timeout=1) #opens up a serial line at COM3
 # with a timeout of 1 second and a baud of 9600
 
 def checkSum(input):
@@ -186,10 +188,12 @@ if __name__ == '__main__': #the main loop -> cancel the script with ctrl + C
     while serialIter < 15:
 
         #translates the data and addes it to the queue
-        recieved = str(serialOne.readline()).replace("\\r\\n", "").replace("b", "")
+        recieved = str(serialOne.readline()).replace("\\r\\n", "").replace("'", "")
         queue.append(testTranslation(recieved))
 
-        #saves the data to the test.csv file
-        CSVsave("test", queue.pop(0))
-        
+        if queue != []:
+            #saves the data to the test.csv file as long as there's data in the
+            #queue
+            CSVsave("test", queue.pop(0))
+
         serialIter += 1
