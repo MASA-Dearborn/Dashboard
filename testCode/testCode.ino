@@ -3,17 +3,17 @@
 //replaced by a TeleGPS in the final
 
 String randString = ""; //creates the random string
-String randTele = ""; //creates the fake semi-random teleGPS string
+//String randTele = ""; //creates the fake semi-random teleGPS string
 
 void setup() {
   // put your setup code here, to run once:
-
+  
+  Serial.begin(9600); //starts the Serial line
   randomSeed(analogRead(0)); //creates a random seed based upon
   //one of the analog ports
-  Serial.begin(9600); //starts the Serial line
   
 }
-
+/*
 void teleGPS() {//creates a fake TeleGPS string
   
   randTele = "TELEM 220710";
@@ -33,23 +33,23 @@ void teleGPS() {//creates a fake TeleGPS string
   randTele = randTele + String(random(17,255), HEX);
   
   randTele = randTele + "85";
-}
+}*/
   
   void loop() {
     // put your main code here, to run repeatedly:
   
-  /*randString = String(random(10,255), HEX); //creates a random list of
+  randString = String(random(17,255), HEX); //creates a random list of
   // 10 random numbers in a string
   
   for (int i = 0; i < 10; i++) {
-    randString = randString + String(random(10,255), HEX);
-  }*/
+    randString = randString + String(random(17,255), HEX);
+  }
 
-  
+  Serial.println(randString); //prints the random string
 
-  teleGPS();
+  //teleGPS();
 
-  Serial.println(randTele); //prints the random TeleGPS string
+  //Serial.println(randTele); //prints the random TeleGPS string
   
 
 }

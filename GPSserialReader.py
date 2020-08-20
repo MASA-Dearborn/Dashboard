@@ -1,4 +1,4 @@
-import serial #imports pyserial for use in the program
+import serial #imports pyserial to read the data from the serial line
 
 portOne = input("Input Port of device:") #asks for the port of the serial device
 
@@ -160,8 +160,7 @@ def testTranslation(input):
     return output[0:]
 
 def CSVsave(fileName, data):
-    #takes the data (given in a python array) and saves it to a CSV file with the
-    #file name given
+    #takes the translated data and saves it to a CSV file with the file name given
 
     file = open(fileName + ".csv", "a") #open and write to a file the data
 
@@ -177,23 +176,39 @@ def CSVsave(fileName, data):
     file.write("\n") #add a new line to the CSV file
     file.close() #close the file
 
+def textSave(fileName, data):
+    #takes the raw data and saves it to a text file with the file name given
+
+    file = open(fileName + ".txt", "a") #open and write to a file the data
+    file.write(str(data)) #saves the data as a single line in the text file
+
+    file.write("\n") #add a new line to the text file
+    file.close() #close the file
+
 if __name__ == '__main__': #the main loop -> cancel the script with ctrl + C
 
     print(serialOne.readline()) #primes the readline to work-- for some reason
     #the readline always starts with a junk line but this simply prints that line
 
-    queue = [] #creates a test queue for the incoming data
+    translatedQueue = [] #creates a translated queue for the incoming data
+    rawQueue = [] #creates a raw queue for the incoming data
 
     serialIter = 0 #creates a loop value for the serial data
     while serialIter < 15:
 
         #translates the data and addes it to the queue
         recieved = str(serialOne.readline()).replace("\\r\\n", "").replace("'", "")
-        queue.append(testTranslation(recieved))
+        rawQueue.append(recieved[1:])
+        translatedQueue.append(testTranslation(recieved))
 
-        if queue != []:
+        if rawQueue != []:
+            #saves the data to the test2.txt file as long as there's data in the
+            #raw queue
+            textSave("test2", rawQueue.pop(0))
+
+        if translatedQueue != []:
             #saves the data to the test.csv file as long as there's data in the
-            #queue
-            CSVsave("test", queue.pop(0))
+            #translated queue
+            CSVsave("test", translatedQueue.pop(0))
 
         serialIter += 1
