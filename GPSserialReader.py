@@ -1,9 +1,13 @@
-import serial #imports pyserial to read the data from the serial line
+#import serial #imports pyserial to read the data from the serial line
 
-portOne = input("Input Port of device:") #asks for the port of the serial device
+#portOne = input("Input Port of device:") #asks for the port of the serial device
 
-serialOne = serial.Serial(portOne, 9600, timeout=1) #opens up a serial line at COM3
+#serialOne = serial.Serial(portOne, 9600, timeout=1) #opens up a serial line at portOne
 # with a timeout of 1 second and a baud of 9600
+
+exe = [input("Input teleGPS string 1 to be tested:"),
+input("Input teleGPS string 2 to be tested:"),
+input("Input teleGPS string 3 to be tested:")] #input for TeleGPS strings to be tested
 
 def checkSum(input):
     #takes an input of raw teleGPS data and calculates what the value of the
@@ -22,6 +26,13 @@ def checkSum(input):
         return True
     else:
         return False
+
+def signedConversion(number):
+    #converts the unsigned 32 bit HEX into signed 2's compliment for the coordinates
+    if number > 2147483648:
+        return int(f'{number:08b}'[1:], 2) - 2147483648
+    else:
+        return number
 
 def TeleGPStranslation(input):
     #takes an input of raw TeleGPS data and returns an array of readable data
@@ -90,10 +101,14 @@ def TeleGPStranslation(input):
                     output.append(int(f'{int(input[18:20],16):08b}'[6:7]))
                     output.append(int(f'{int(input[18:20],16):08b}'[7:]))
 
-                    #approximate altitude, latitude, longitude (output 10 through 12)
+                    #approximate altitude (output 10)
                     output.append(int(input[22:24] + input[20:22], 16))
-                    output.append(input[24:32])
-                    output.append(input[32:40])
+
+                    #latitude (output 11)
+                    output.append(signedConversion(int(input[30:32] + input[28:30] + input[26:28] + input[24:26], 16)) * 1/10000000)
+
+                    #longitude (output 12)
+                    output.append(signedConversion(int(input[38:40] + input[36:38] + input[34:36] + input[32:34], 16)) * 1/10000000)
 
                     #date and time (output 13 through 19)
                     output.append(int(input[40:42], 16))
@@ -125,8 +140,8 @@ def TeleGPStranslation(input):
                     #space vehicle identifiers and C/N1 signal quality inidcators (output[6:29])
                     transIter = 0 #creates an iteration value for the satellite data loop
                     while transIter < 12:
-                        output.append(int(input[20+2*transIter:22+2*transIter], 16)) #space vehicle identifier
-                        output.append(int(input[22+2*transIter:24+2*transIter], 16)) #C/N1 signal quality indicator
+                        output.append(int(input[20+4*transIter:22+4*transIter], 16)) #space vehicle identifier
+                        output.append(int(input[22+4*transIter:24+4*transIter], 16)) #C/N1 signal quality indicator
                         transIter += 1
 
                 else: #packet has bad packet type, discard
@@ -187,28 +202,32 @@ def textSave(fileName, data):
 
 if __name__ == '__main__': #the main loop -> cancel the script with ctrl + C
 
-    print(serialOne.readline()) #primes the readline to work-- for some reason
+    print(TeleGPStranslation(exe[0])) #prints out the translation of the three lines from above
+    print(TeleGPStranslation(exe[1]))
+    print(TeleGPStranslation(exe[2]))
+
+    #print(serialOne.readline()) #primes the readline to work-- for some reason
     #the readline always starts with a junk line but this simply prints that line
 
-    translatedQueue = [] #creates a translated queue for the incoming data
-    rawQueue = [] #creates a raw queue for the incoming data
+    #translatedQueue = [] #creates a translated queue for the incoming data
+    #rawQueue = [] #creates a raw queue for the incoming data
 
-    serialIter = 0 #creates a loop value for the serial data
-    while serialIter < 15:
+    #serialIter = 0 #creates a loop value for the serial data
+    #while serialIter < 15:
 
         #translates the data and addes it to the queue
-        recieved = str(serialOne.readline()).replace("\\r\\n", "").replace("'", "")
-        rawQueue.append(recieved[1:])
-        translatedQueue.append(testTranslation(recieved))
+    #    recieved = str(serialOne.readline()).replace("\\r\\n", "").replace("'", "")
+    #    rawQueue.append(recieved[1:])
+    #    translatedQueue.append(testTranslation(recieved))
 
-        if rawQueue != []:
+    #    if rawQueue != []:
             #saves the data to the test2.txt file as long as there's data in the
             #raw queue
-            textSave("test2", rawQueue.pop(0))
+    #        textSave("test2", rawQueue.pop(0))
 
-        if translatedQueue != []:
+    #    if translatedQueue != []:
             #saves the data to the test.csv file as long as there's data in the
             #translated queue
-            CSVsave("test", translatedQueue.pop(0))
+    #        CSVsave("test", translatedQueue.pop(0))
 
-        serialIter += 1
+        #serialIter += 1
