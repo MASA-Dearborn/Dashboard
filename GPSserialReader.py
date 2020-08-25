@@ -1,40 +1,42 @@
-#import serial #imports pyserial to read the data from the serial line
+import serial #imports pyserial to read the data from the serial line
+import threading #imports multithreading for the queue and saving data functions
 
-#portOne = input("Input Port of device:") #asks for the port of the serial device
+portOne = input("Input Port of device:") #asks for the port of the serial device
 
-#serialOne = serial.Serial(portOne, 9600, timeout=1) #opens up a serial line at portOne
+serialOne = serial.Serial(portOne, 9600, timeout=1) #opens up a serial line at portOne
 # with a timeout of 1 second and a baud of 9600
 
-exe = [input("Input teleGPS string 1 to be tested:"),
-input("Input teleGPS string 2 to be tested:"),
-input("Input teleGPS string 3 to be tested:")] #input for TeleGPS strings to be tested
-
-def checkSum(input):
-    #takes an input of raw teleGPS data and calculates what the value of the
-    #checksum should be given the data, then returns whether or not the
-    #checksum matches
-    checkedData = input[8:len(input)-2] #data the checksum checks
-    i = 0 #iteration number
-    sum = 0 #sum of the bytes
-
-    while i < len(checkedData): #sums the hex bytes
-        sum = sum + int(checkedData[i:i+2], 16)
-        i = i + 2
-
-    if (sum + 90) % 256 == int(input[len(input)-2:], 16): #checks the checksum's
-    #value given the formula from the TeleGPS modulation scheme
-        return True
-    else:
-        return False
-
-def signedConversion(number):
-    #converts the unsigned 32 bit HEX into signed 2's compliment for the coordinates
-    if number > 2147483648:
-        return int(f'{number:08b}'[1:], 2) - 2147483648
-    else:
-        return number
+#exe = [input("Input teleGPS string 1 to be tested:"),
+#input("Input teleGPS string 2 to be tested:"),
+#input("Input teleGPS string 3 to be tested:")] #input for TeleGPS strings to be tested
 
 def TeleGPStranslation(input):
+
+    def checkSum(input):
+        #takes an input of raw teleGPS data and calculates what the value of the
+        #checksum should be given the data, then returns whether or not the
+        #checksum matches
+        checkedData = input[8:len(input)-2] #data the checksum checks
+        i = 0 #iteration number
+        sum = 0 #sum of the bytes
+
+        while i < len(checkedData): #sums the hex bytes
+            sum = sum + int(checkedData[i:i+2], 16)
+            i = i + 2
+
+        if (sum + 90) % 256 == int(input[len(input)-2:], 16): #checks the checksum's
+        #value given the formula from the TeleGPS modulation scheme
+            return True
+        else:
+            return False
+
+    def signedConversion(number):
+        #converts the unsigned 32 bit HEX into signed 2's compliment for the coordinates
+        if number >= 2147483648:
+            return int(f'{number:08b}'[1:], 2) - 2147483648
+        else:
+            return number
+
     #takes an input of raw TeleGPS data and returns an array of readable data
     output = []
 
@@ -200,34 +202,48 @@ def textSave(fileName, data):
     file.write("\n") #add a new line to the text file
     file.close() #close the file
 
-if __name__ == '__main__': #the main loop -> cancel the script with ctrl + C
+def queueData(serialName, rawQueueName, translatedQueueName, translationFunction):
+    #queue's data from the serial line to allow for fast incoming data, designed for
+    #multithreading use
+    if serialName.readline() != '':
+        recieved = str(serialName.readline()).replace("\\r\\n", "").replace("'", "")
+        rawQueueName.append(recieved[1:])
+        translatedQueueName.append(translationFunction(recieved))
 
-    print(TeleGPStranslation(exe[0])) #prints out the translation of the three lines from above
-    print(TeleGPStranslation(exe[1]))
-    print(TeleGPStranslation(exe[2]))
+if __name__ == '__main__':
 
-    #print(serialOne.readline()) #primes the readline to work-- for some reason
+    #print(TeleGPStranslation(exe[0])) #prints out the translation of the three lines from above
+    #print(TeleGPStranslation(exe[1]))
+    #print(TeleGPStranslation(exe[2]))
+
+    print(serialOne.readline()) #primes the readline to work-- for some reason
     #the readline always starts with a junk line but this simply prints that line
 
-    #translatedQueue = [] #creates a translated queue for the incoming data
-    #rawQueue = [] #creates a raw queue for the incoming data
+    translatedQueue = [] #creates a translated queue for the incoming data
+    rawQueue = [] #creates a raw queue for the incoming data
 
-    #serialIter = 0 #creates a loop value for the serial data
-    #while serialIter < 15:
+    while True: #the main loop -> cancel the script with ctrl + C
 
-        #translates the data and addes it to the queue
-    #    recieved = str(serialOne.readline()).replace("\\r\\n", "").replace("'", "")
-    #    rawQueue.append(recieved[1:])
-    #    translatedQueue.append(testTranslation(recieved))
+        #the queue thread
+        queueThread = threading.Thread(target=queueData, args=(serialOne, rawQueue,
+        translatedQueue, testTranslation))
 
-    #    if rawQueue != []:
-            #saves the data to the test2.txt file as long as there's data in the
-            #raw queue
-    #        textSave("test2", rawQueue.pop(0))
+        #run the queue thread
+        queueThread.start()
+        queueThread.join()
 
-    #    if translatedQueue != []:
-            #saves the data to the test.csv file as long as there's data in the
-            #translated queue
-    #        CSVsave("test", translatedQueue.pop(0))
+        if rawQueue != []:
+            #the raw file thread
+            rawThread = threading.Thread(target=textSave, args=("test2", rawQueue.pop(0)))
 
-        #serialIter += 1
+            #run the raw data thread
+            rawThread.start()
+            rawThread.join()
+
+        if translatedQueue != []:
+            #the translated file thread
+            translatedThread =  threading.Thread(target=CSVsave, args=("test", translatedQueue.pop(0)))
+
+            #run the translated data thread
+            translatedThread.start()
+            translatedThread.join()
