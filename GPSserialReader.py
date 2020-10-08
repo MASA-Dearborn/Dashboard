@@ -6,10 +6,6 @@ portOne = input("Input Port of device:") #asks for the port of the serial device
 serialOne = serial.Serial(portOne, 9600, timeout=1) #opens up a serial line at portOne
 # with a timeout of 1 second and a baud of 9600
 
-#exe = [input("Input teleGPS string 1 to be tested:"),
-#input("Input teleGPS string 2 to be tested:"),
-#input("Input teleGPS string 3 to be tested:")] #input for TeleGPS strings to be tested
-
 def TeleGPStranslation(input):
 
     def checkSum(input):
@@ -39,6 +35,11 @@ def TeleGPStranslation(input):
 
     #takes an input of raw TeleGPS data and returns an array of readable data
     output = []
+
+    if input == []: #if the input is empty, don't bother trying to decode it
+        print('error, no data inputted')
+        return None
+
 
     if 'TELEM' == input[:5]: #checks to make sure the data starts with the correct
     #start code from the TeleDongle
@@ -164,18 +165,6 @@ def TeleGPStranslation(input):
         print("improper string, no start code")
         return None
 
-def testTranslation(input):
-    #translates the test code from the arduino
-
-    output = []
-
-    transIter = 1 #creates an iteration to break up the numbers
-    while transIter < 23:
-        output.append(input[transIter:transIter+2])
-        transIter += 2
-
-    return output[0:]
-
 def CSVsave(fileName, data):
     #takes the translated data and saves it to a CSV file with the file name given
 
@@ -208,13 +197,11 @@ def queueData(serialName, rawQueueName, translatedQueueName, translationFunction
     if serialName.readline() != '':
         recieved = str(serialName.readline()).replace("\\r\\n", "").replace("'", "")
         rawQueueName.append(recieved[1:])
-        translatedQueueName.append(translationFunction(recieved))
+        if translationFunction(recieved[1:]) != None: #only puts in data if there's
+        #no error
+            translatedQueueName.append(translationFunction(recieved[1:]))
 
 if __name__ == '__main__':
-
-    #print(TeleGPStranslation(exe[0])) #prints out the translation of the three lines from above
-    #print(TeleGPStranslation(exe[1]))
-    #print(TeleGPStranslation(exe[2]))
 
     print(serialOne.readline()) #primes the readline to work-- for some reason
     #the readline always starts with a junk line but this simply prints that line
@@ -226,13 +213,13 @@ if __name__ == '__main__':
 
         #the queue thread
         queueThread = threading.Thread(target=queueData, args=(serialOne, rawQueue,
-        translatedQueue, testTranslation))
+        translatedQueue, TeleGPStranslation))
 
         #run the queue thread
         queueThread.start()
         queueThread.join()
 
-        if rawQueue != []:
+        if len(rawQueue) != 0:
             #the raw file thread
             rawThread = threading.Thread(target=textSave, args=("test2", rawQueue.pop(0)))
 
@@ -240,7 +227,7 @@ if __name__ == '__main__':
             rawThread.start()
             rawThread.join()
 
-        if translatedQueue != []:
+        if len(translatedQueue) != 0:
             #the translated file thread
             translatedThread =  threading.Thread(target=CSVsave, args=("test", translatedQueue.pop(0)))
 
