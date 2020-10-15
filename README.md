@@ -6,6 +6,6 @@ This particular branch is devoted to the development of the GPS map that will sh
 ## Framework Used
 <b> Built with <b>
 * Python 3.7.3
-* HTML, Javascript
+* HTML, Javascript, CSS
 * [Flask Microframework](https://flask.palletsprojects.com/en/1.1.x/)
 * [Leaflet Javascript Library](https://leafletjs.com/)
