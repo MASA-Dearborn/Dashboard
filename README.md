@@ -9,4 +9,3 @@ This particular branch is devoted to the development of a temporary serial reade
 <b> Built with </b>
 * Python 3.8.1
 * [pySerial Library](https://pyserial.readthedocs.io/en/latest/index.html)
-* [Arduino 1.8.13](https://www.arduino.cc/) (for serial simulation purposes)
