@@ -25,12 +25,7 @@
   <h>Blue is the dart, yellow is the booster</h> <!--Label for the map-->
 
   <!--all of the user inputs. These will be handled by the backend in the final-->
-  <div>LatInt: <input type="text" id="newLatint"></input></div>
-  <div>LatFloat: <input type="text" id="newLatfloat"></input></div>
-  <div>LatChar: <input type="text" id="newLatchar"></input></div>
-  <div>LongInt: <input type="text" id="newLongint"></input></div>
-  <div>LongFloat: <input type="text" id="newLongfloat"></input></div>
-  <div>LongChar: <input type="text" id="newLongchar"></input></div>
+
   <div>Array: <input type="text" id="dataLocation"></input></div>
   <input type="button" value="Submit!" onclick="newData()"></input>
 
@@ -48,7 +43,7 @@
       }
     });
 
-    var blueIcon = new rocketIcons({iconUrl:'mapMarkers/blueMarker.png'}),
+    blueIcon = new rocketIcons({iconUrl:'mapMarkers/blueMarker.png'}),
     yellowIcon = new rocketIcons({iconUrl:'mapMarkers/yellowMarker.png'}),
     personIcon = new rocketIcons({iconUrl:'mapMarkers/personMarker.png', iconAnchor: [16, 41]});
     //the actual icons, defines the picture url and moves the anchor for the person version
@@ -65,12 +60,16 @@
                 {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               }).addTo(masaMap); //The tileset for the map
 
-    miscMarkers.push(L.marker([32.9903796,-106.975041], {icon:personIcon}));
-    miscMarkers[0].addTo(masaMap); //adds the location of
-    //spaceport america to the map
-//    dartMarkers.push(L.marker([32.94293,-106.915053], {icon:blueIcon}));
-//    dartMarkers[0].addTo(masaMap); //adds a rocket data point to the map
+              
+              
+    miscMarkers[0].addTo(masaMap); //adds the location of spaceport america to the map            
 
+    miscMarkers.push(L.marker([32.9903796,-106.975041], {icon:personIcon}));
+    darkMarkers[0].addTo(masaMap); // should add the person icon to map
+
+    dartMarkers.push(L.marker([32.94293,-106.915053], {icon:blueIcon}));
+    dartMarkers[1].addTo(masaMap); //adds a rocket data point to the map
+/*
     function newData() {
       if (document.getElementById("dataLocation").value == "Booster") {
         boosterMarkers.push(L.marker([decMinToDegDec("Lat"), decMinToDegDec("Long")], {icon:yellowIcon})); //pushes
@@ -87,7 +86,7 @@
         //at the user input location
       }
     }
-
+*/
     function decMinToDegDec(latOrlong) { //converts degrees decimal minutes (GPS output)
       //to degrees decimal (map input)
       var lInt = Number(document.getElementById("new" + latOrlong + "int").value);
