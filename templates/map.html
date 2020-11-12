@@ -35,7 +35,7 @@
   <script>
     var rocketIcons = L.Icon.extend({
       options: {
-      shadowUrl: 'mapMarkers/shadow.png',
+      shadowUrl: '../static/shadow.png',
       iconSize:     [33, 45], // size of the icon
       shadowSize:   [44, 16], // size of the shadow
       iconAnchor:   [16, 45], // point of the icon which will correspond to marker's location
@@ -43,9 +43,9 @@
       }
     });
 
-    blueIcon = new rocketIcons({iconUrl:'mapMarkers/blueMarker.png'}),
-    yellowIcon = new rocketIcons({iconUrl:'mapMarkers/yellowMarker.png'}),
-    personIcon = new rocketIcons({iconUrl:'mapMarkers/personMarker.png', iconAnchor: [16, 41]});
+    blueIcon = new rocketIcons({iconUrl:'../static/blueMarker.png'}),
+    yellowIcon = new rocketIcons({iconUrl:'../static/yellowMarker.png'}),
+    personIcon = new rocketIcons({iconUrl:'../static/personMarker.png', iconAnchor: [16, 41]});
     //the actual icons, defines the picture url and moves the anchor for the person version
     //to make it fit
 
@@ -60,7 +60,7 @@
                 {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               }).addTo(masaMap); //The tileset for the map
 
-              
+
     miscMarkers.push(L.marker([32.9903796,-106.975041], {icon:personIcon}));
     miscMarkers[0].addTo(masaMap); // should add the person icon to map
 
