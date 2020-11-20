@@ -206,6 +206,23 @@ if __name__ == '__main__':
     print(serialOne.readline()) #primes the readline to work-- for some reason
     #the readline always starts with a junk line but this simply prints that line
 
+    serialOne.write("m 0\nc T1\nm 20\n".encode('utf-8'))
+    #write the handshaking bytes for interfacing with the TeleDongle
+
+    #note - these commands were taken from the Altus Metrum software
+    #MISC UNKNOWN COMMANDS
+    #"E 0\n"
+    #"m 0\n"
+
+    #together these two seem to spit out configuration data
+    #"c s\n"
+    #"f v\n"
+
+    #THE TELEM STRING COMMANDS - call these three in order to get TELEM strings
+    #"m 0\n"
+    #"c T1\n"
+    #"m 20\n"
+
     translatedQueue = [] #creates a translated queue for the incoming data
     rawQueue = [] #creates a raw queue for the incoming data
 
