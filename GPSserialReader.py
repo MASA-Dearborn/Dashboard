@@ -206,13 +206,15 @@ if __name__ == '__main__':
     print(serialOne.readline()) #primes the readline to work-- for some reason
     #the readline always starts with a junk line but this simply prints that line
 
-    serialOne.write("m 0\nc T1\nm 20\n".encode('utf-8'))
+    serialOne.write("E 0\nm 0\nc T1\nm 20\n".encode('utf-8'))
     #write the handshaking bytes for interfacing with the TeleDongle
 
     #note - these commands were taken from the Altus Metrum software
-    #MISC UNKNOWN COMMANDS
-    #"E 0\n"
+    #MISC COMMANDS
     #"m 0\n"
+
+    # This one seems to sent up the enter keys after strings
+    #"E 0\n"
 
     #together these two seem to spit out configuration data
     #"c s\n"
