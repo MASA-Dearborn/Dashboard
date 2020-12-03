@@ -28,14 +28,15 @@
 
   <div>Array: <input type="text" id="dataLocation"></input></div>
   <input type="button" value="Submit!" onclick="newData()"></input>
-
+  <input type="button" value="Hide Dart" onclick="hide_dart()"></button>
+  <input type="button" value="Show Dart" onclick="show_dart()"></button>
   <!--<button value="Toggle Dart Markers" onclick="toggleDart"></input>
   <button value="Toggle Booster Markers" onclick="toggleBooster"></input>-->
 
   <script>
     var rocketIcons = L.Icon.extend({
       options: {
-      shadowUrl: '../static/shadow.png',
+      shadowUrl: 'static/shadow.png',
       iconSize:     [33, 45], // size of the icon
       shadowSize:   [44, 16], // size of the shadow
       iconAnchor:   [16, 45], // point of the icon which will correspond to marker's location
@@ -43,9 +44,9 @@
       }
     });
 
-    blueIcon = new rocketIcons({iconUrl:'../static/blueMarker.png'}),
-    yellowIcon = new rocketIcons({iconUrl:'../static/yellowMarker.png'}),
-    personIcon = new rocketIcons({iconUrl:'../static/personMarker.png', iconAnchor: [16, 41]});
+    blueIcon = new rocketIcons({iconUrl:'static/blueMarker.png'}),
+    yellowIcon = new rocketIcons({iconUrl:'static/yellowMarker.png'}),
+    personIcon = new rocketIcons({iconUrl:'static/personMarker.png', iconAnchor: [16, 41]});
     //the actual icons, defines the picture url and moves the anchor for the person version
     //to make it fit
 
@@ -66,24 +67,15 @@
 
     dartMarkers.push(L.marker([32.94293,-106.915053], {icon:blueIcon}));
     dartMarkers[0].addTo(masaMap); //adds a rocket data point to the map
-/*
-    function newData() {
-      if (document.getElementById("dataLocation").value == "Booster") {
-        boosterMarkers.push(L.marker([decMinToDegDec("Lat"), decMinToDegDec("Long")], {icon:yellowIcon})); //pushes
-        //the data from the user input into the booster marker array
-        console.log(boosterMarkers);
-        boosterMarkers[boosterMarkers.length - 1].addTo(masaMap); //puts a marker
-        //at the user input location
-      }
-      else if (document.getElementById("dataLocation").value == "Dart") {
-        dartMarkers.push(L.marker([decMinToDegDec("Lat"), decMinToDegDec("Long")], {icon:blueIcon})); //pushes
-        //the data from the user input into the booster marker array
-        console.log(dartMarkers);
-        dartMarkers[dartMarkers.length - 1].addTo(masaMap); //puts a marker
-        //at the user input location
-      }
+    //use remove(), instead of addTo, to remove a marker
+
+    function hide_dart() { //This functions hides the blue dart
+      dartMarkers[0].remove(masaMap);
     }
-*/
+
+    function show_dart() { //This funtions shows the hidden blue dart
+      dartMarkers[0].addTo(masaMap);
+    }
     function decMinToDegDec(latOrlong) { //converts degrees decimal minutes (GPS output)
       //to degrees decimal (map input)
       var lInt = Number(document.getElementById("new" + latOrlong + "int").value);
