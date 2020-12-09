@@ -28,8 +28,10 @@
 
   <div>Array: <input type="text" id="dataLocation"></input></div>
   <input type="button" value="Submit!" onclick="newData()"></input>
-  <input type="button" value="Hide Dart" onclick="hide_dart()"></button>
-  <input type="button" value="Show Dart" onclick="show_dart()"></button>
+  <input type="button" value="Hide Person" onclick="hide_misc()"></button>
+  <input type="button" value="Hide Blue" onclick="hide_blue_dart()"></button>
+  <input type="button" value="Hide Yellow" onclick="hide_yellow_dart()"></button>
+  <input type="button" value="Show ALL" onclick="show_all()"></button>
   <!--<button value="Toggle Dart Markers" onclick="toggleDart"></input>
   <button value="Toggle Booster Markers" onclick="toggleBooster"></input>-->
 
@@ -67,14 +69,24 @@
 
     dartMarkers.push(L.marker([32.94293,-106.915053], {icon:blueIcon}));
     dartMarkers[0].addTo(masaMap); //adds a rocket data point to the map
-    //use remove(), instead of addTo, to remove a marker
 
-    function hide_dart() { //This functions hides the blue dart
-      dartMarkers[0].remove(masaMap);
+    dartMarkers.push(L.marker([33.0000,-106.915053], {icon:yellowIcon}));
+    dartMarkers[1].addTo(masaMap);
+
+    function hide_blue_dart() { //This functions hides the blue(dart)
+      dartMarkers[0].remove(masaMap);//use remove(), instead of addTo, to remove a marker
+    }
+    function hide_yellow_dart() { //This functions hides the yellow marker(booster)
+      dartMarkers[1].remove(masaMap);
+    }
+    function hide_misc() { //This functions hides the person marker
+      miscMarkers[0].remove(masaMap);
     }
 
-    function show_dart() { //This funtions shows the hidden blue dart
+    function show_all() {
+      miscMarkers[0].addTo(masaMap);
       dartMarkers[0].addTo(masaMap);
+      dartMarkers[1].addTo(masaMap);
     }
     function decMinToDegDec(latOrlong) { //converts degrees decimal minutes (GPS output)
       //to degrees decimal (map input)
