@@ -6,8 +6,23 @@ portOne = input("Input Port of device:") #asks for the port of the serial device
 serialOne = serial.Serial(portOne, 9600, timeout=1) #opens up a serial line at portOne
 # with a timeout of 1 second and a baud of 9600
 
-def TeleGPStranslation(input):
+multiplePorts = input("Two ports enabled? (Y/N):") #defines the multiplePorts variable which
+# keeps track of whether the program has one or two ports open
 
+while multiplePorts != "Y" and multiplePorts != "N": #continue checking the multiplePorts
+# value until a valid response is given
+    multiplePorts = input("Two ports enabled? (Y/N):")
+
+if multiplePorts == "Y": #runs if the user tells the program there's a second port
+    portTwo = input("Input Port of second device:") #ask for the second port of the second
+    #serial device
+
+    serialTwo = serial.Serial(portTwo, 9600, timeout=1) #opens up a serial line at portTwo
+    # with a timeout of 1 second and a buad of 9600
+
+def TeleGPStranslation(input):
+    # the main function of the program, turns the TeleGPS strings into comma
+    #seperated lists that expand out all the data
     def checkSum(input):
         #takes an input of raw teleGPS data and calculates what the value of the
         #checksum should be given the data, then returns whether or not the
@@ -37,8 +52,10 @@ def TeleGPStranslation(input):
     output = []
 
     if input == []: #if the input is empty, don't bother trying to decode it
-        print('error, no data inputted')
-        return None
+        #print('error, no data inputted')
+        #return None
+        output = ['error, no data inputted']
+        return output[0:]
 
 
     if 'TELEM' == input[:5]: #checks to make sure the data starts with the correct
@@ -148,22 +165,30 @@ def TeleGPStranslation(input):
                         transIter += 1
 
                 else: #packet has bad packet type, discard
-                    print('error, incorrect packet type')
-                    return None
+                    #print('error, incorrect packet type')
+                    #return None
+
+                    output = ['error, incorrect packet type']
 
                 return output[0:]
 
             else: #packet does not have a valid CRC value
-                print('error, improper CRC')
-                return None
+                #print('error, improper CRC')
+                #return None
+                output = ['error, improper CRC']
+                return output[0:]
 
         else: #packet does not have the correct checksum so data has been lost
-            print('error, wrong checksum, data lost')
-            return None
+            #print('error, wrong checksum, data lost')
+            #return None
+            output = ['error, wrong checksum, data lost']
+            return output[0:]
 
     else: #packet lacks the TELEM start string
-        print("improper string, no start code")
-        return None
+        #print('error, improper string, no start code')
+        #return None
+        output = ['error, improper string, no start code']
+        return output[0:]
 
 def CSVsave(fileName, data):
     #takes the translated data and saves it to a CSV file with the file name given
@@ -228,28 +253,64 @@ if __name__ == '__main__':
     translatedQueue = [] #creates a translated queue for the incoming data
     rawQueue = [] #creates a raw queue for the incoming data
 
+    if multiplePorts == "Y": #runs if there's a second port specified
+        print(serialTwo.readline()) #primes the readline to work-- for some reason
+        #the readline always starts with a junk line but this simply prints that line
+
+        serialTwo.write("E 0\nm 0\nc T1\nm 20\n".encode('utf-8'))
+        #write the handshaking bytes for interfacing with the TeleDongle (explained above)
+
+        translatedQueueTwo = [] #creates a second translated queue for the incoming data
+        rawQueueTwo = [] #creates a second raw queue for the incoming data
+
     while True: #the main loop -> cancel the script with ctrl + C
 
-        #the queue thread
+        #the queue thread for serialOne
         queueThread = threading.Thread(target=queueData, args=(serialOne, rawQueue,
         translatedQueue, TeleGPStranslation))
 
-        #run the queue thread
+        #run the queue thread for serialOne
         queueThread.start()
         queueThread.join()
 
         if len(rawQueue) != 0:
-            #the raw file thread
-            rawThread = threading.Thread(target=textSave, args=("test2", rawQueue.pop(0)))
+            #the raw file thread for serialOne
+            rawThread = threading.Thread(target=textSave, args=("rawOne", rawQueue.pop(0)))
 
-            #run the raw data thread
+            #run the raw data thread for serialOne
             rawThread.start()
             rawThread.join()
 
         if len(translatedQueue) != 0:
-            #the translated file thread
-            translatedThread =  threading.Thread(target=CSVsave, args=("test", translatedQueue.pop(0)))
+            #the translated file thread for serialOne
+            translatedThread = threading.Thread(target=CSVsave, args=("translatedOne", translatedQueue.pop(0)))
 
-            #run the translated data thread
+            #run the translated data thread for serialOne
             translatedThread.start()
             translatedThread.join()
+
+        if multiplePorts == "Y": #run if there's a second port specified
+
+            #the queue thread for serialTwo
+            queueThreadTwo = threading.Thread(target=queueData, args=(serialTwo, rawQueueTwo,
+            translatedQueueTwo, TeleGPStranslation))
+
+            #run the queue thread for serialTwo
+            queueThreadTwo.start()
+            queueThreadTwo.join()
+
+            if len(rawQueueTwo) != 0:
+                #the raw file thread for serialTwo
+                rawThreadTwo = threading.Thread(target=textSave, args=("rawTwo", rawQueueTwo.pop(0)))
+
+                #run the raw data thread for serialTwo
+                rawThreadTwo.start()
+                rawThreadTwo.join()
+
+            if len(translatedQueueTwo) != 0:
+                #the translated file thread for serialTwo
+                translatedThreadTwo = threading.Thread(target=CSVsave, args=("translatedTwo", translatedQueueTwo.pop(0)))
+
+                #run the translated data thread for serialTwo
+                translatedThreadTwo.start()
+                translatedThreadTwo.join()

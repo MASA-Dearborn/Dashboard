@@ -1,0 +1,254 @@
+434.650 MHz, COM7
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+---
+434.650 MHz, COM7
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper CRC
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper CRC
+error, improper string, no start code
+error, improper string, no start code
+error, incorrect packet type
+error, improper string, no start code
+error, improper string, no start code
+error, incorrect packet type
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper CRC
+error, improper string, no start code
+error, improper string, no start code
+error, incorrect packet type
+error, improper string, no start code
+error, improper CRC
+error, incorrect packet type
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, incorrect packet type
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, incorrect packet type
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+---
+34,4103,737,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,837,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,938,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+34,4103,1140,5,-11.0,2,0,0,0,0,65519,0.0,0.0,212,1,12,23,59,55,231,231,231,1,0,0,0
+error, improper CRC
+error, improper CRC
+34,4103,1440,5,-11.0,2,0,0,0,0,65519,0.0,0.0,212,1,12,23,59,58,231,231,231,1,0,0,0
+34,4103,1542,5,-11.0,2,0,0,0,0,65519,0.0,0.0,212,1,12,23,59,59,231,231,231,1,0,0,0
+error, improper CRC
+error, improper CRC
+error, improper CRC
+error, improper CRC
+34,4103,1861,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,2042,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,2142,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,5,231,231,231,1,0,0,0
+error, improper CRC
+34,4103,2343,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,7,231,231,231,1,0,0,0
+error, improper CRC
+34,4103,2540,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,9,231,231,231,1,0,0,0
+error, improper CRC
+34,4103,2642,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,2744,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,2844,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,2944,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+error, improper CRC
+error, improper CRC
+error, improper CRC
+34,4103,3442,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,18,231,231,231,1,0,0,0
+34,4103,3539,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,19,231,231,231,1,0,0,0
+error, improper CRC
+34,4103,3642,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+error, improper CRC
+error, improper CRC
+34,4103,4042,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+34,4103,4453,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,28,231,231,231,1,0,0,0
+34,4103,4538,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,29,231,231,231,1,0,0,0
+34,4103,4538,4,-11.0,37,1,1,23,1984,KE8NIJ,1.8.6
+error, improper CRC
+34,4103,4743,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,4844,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,4944,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+34,4103,5149,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,35,231,231,231,1,0,0,0
+34,4103,5248,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,36,231,231,231,1,0,0,0
+error, improper CRC
+34,4103,5448,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,38,231,231,231,1,0,0,0
+34,4103,5541,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,39,231,231,231,1,0,0,0
+34,4103,5541,4,-11.0,37,1,1,23,1984,KE8NIJ,1.8.6
+34,4103,5647,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+34,4103,5848,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,5946,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+error, improper CRC
+error, improper CRC
+34,4103,6363,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,47,231,231,231,1,0,0,0
+34,4103,6465,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,48,231,231,231,1,0,0,0
+error, improper CRC
+error, improper CRC
+error, improper CRC
+error, improper CRC
+34,4103,6857,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,6956,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+error, improper CRC
+error, improper CRC
+34,4103,7342,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,57,231,231,231,1,0,0,0
+error, improper CRC
+34,4103,7538,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,0,59,231,231,231,1,0,0,0
+error, improper CRC
+error, improper CRC
+34,4103,7740,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,7842,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,7943,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,8044,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+error, improper CRC
+34,4103,8345,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,1,7,231,231,231,1,0,0,0
+error, improper CRC
+34,4103,8543,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,1,9,231,231,231,1,0,0,0
+error, improper CRC
+error, improper CRC
+error, improper CRC
+error, improper CRC
+error, improper CRC
+error, improper CRC
+34,4103,9143,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,1,15,231,231,231,1,0,0,0
+34,4103,9243,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,1,16,231,231,231,1,0,0,0
+error, improper CRC
+34,4103,9443,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,1,18,231,231,231,1,0,0,0
+34,4103,9542,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,1,19,231,231,231,1,0,0,0
+34,4103,9542,4,-11.0,37,1,1,23,1984,KE8NIJ,1.8.6
+error, improper CRC
+34,4103,9762,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,9862,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+34,4103,10063,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+error, improper CRC
+error, improper CRC
+error, improper CRC
+34,4103,10564,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,1,29,231,231,231,1,0,0,0
+34,4103,10564,4,-11.0,37,1,1,23,1984,KE8NIJ,1.8.6
+error, improper CRC
+error, improper CRC
+error, improper CRC
+34,4103,11043,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+error, improper CRC
+34,4103,11343,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,1,37,231,231,231,1,0,0,0
+34,4103,11444,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,1,38,231,231,231,1,0,0,0
+34,4103,11543,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,1,39,231,231,231,1,0,0,0
+error, improper CRC
+34,4103,11641,4,-11.0,37,1,1,23,1984,KE8NIJ,1.8.6
+error, improper CRC
+34,4103,11843,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+34,4103,11939,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+error, improper CRC
+error, improper CRC
+error, improper CRC
+34,4103,12439,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,1,48,231,231,231,1,0,0,0
+34,4103,12540,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,1,49,231,231,231,1,0,0,0
+error, improper CRC
+34,4103,12640,4,-11.0,37,1,1,23,1984,KE8NIJ,1.8.6
+34,4103,12743,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+34,4103,12942,6,-11.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+error, improper CRC
+error, improper CRC
+34,4103,13244,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,1,56,231,231,231,1,0,0,0
+error, improper CRC
+error, improper CRC
+error, improper CRC
+34,4103,13644,5,-11.0,2,0,0,0,0,65519,0.0,0.0,236,1,6,0,2,0,231,231,231,1,0,0,0
+error, improper CRC
+error, improper CRC
+error, improper CRC
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
+error, improper string, no start code
