@@ -64,7 +64,7 @@ def TeleGPStranslation(input):
         if checkSum(input) == True: #checks the checksum value to ensure no lost
         # data
 
-            if int(f'{int(input[len(input)-4:len(input)-2], 16):08b}'[7:]) == 1:
+            if int(f'{int(input[len(input)-4:len(input)-2], 16):08b}'[:1]) == 1:
                 #checks the second to last byte of the string's 7th binary digit to
                 #ensure a proper CRC value (this comes from the encoding scheme of the
                 #TeleGPS, see https://altusmetrum.org/AltOS/doc/telemetry.html)
