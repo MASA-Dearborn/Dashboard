@@ -1,1 +1,4 @@
 .vscode/settings.json
+masalib/__pycache__/
+database.db
+test_database.db

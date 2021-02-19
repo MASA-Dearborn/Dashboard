@@ -1,4 +1,4 @@
-# Serial Reader 
+# Serial Reader
 
 import serial
 import threading
@@ -16,10 +16,10 @@ class SerialReader():
         self.thread = threading.Thread(target=self.read)    # Create the listening thread
         self.thread.daemon = True
         self.thread.start()
-    
+
     def read(self):
         pass
-    
+
     def check_crc(self, data, crc):
         pass
 
@@ -37,7 +37,7 @@ class DataSerialReader(SerialReader):
         self.stop_byte = stop_byte
 
         super().__init__(port, speed, header_byte)
-    
+
     def read(self):
         """The main data processing loop for the DataSerialReader."""
 
@@ -77,7 +77,7 @@ class TeleGPSSerialReader(SerialReader):
         for i in range(int(len(hexstr) / 2)):
             byt = int(hexstr[i*2:i*2+2], 16)
             bytlst.append(byt)
-        
+
         return bytlst
 
     def read(self):
@@ -89,7 +89,7 @@ class TeleGPSSerialReader(SerialReader):
             if next_char in self.header:    # Don't worry about the character if its in the header
                 self.current_string == ""
                 self.length = 0
-            
+
             self.current_string += next_char    # Add the next character onto the string
             self.length += 1
 
@@ -102,16 +102,16 @@ class TeleGPSSerialReader(SerialReader):
 
                 if crc_check == 128:
                     self.packet_queue.put(bytelist[1:-4])
-                
+
                 self.current_string == ""
                 self.length = 0
 
-            
+
 class EggFinderSerialReader(SerialReader):
     def __init__(self, port, speed, header_byte):
         self.current_string = ""
         super().__init__(port, speed, header_byte)
-    
+
     @staticmethod
     def _convert_float_to_bytelist(self, flo):
         """
@@ -143,9 +143,9 @@ class EggFinderSerialReader(SerialReader):
                     pass # process satellite data
 
                 self.current_string = ""
-            
+
             self.current_string += next_char
-            
+
 
 class VideoSerialReader(SerialReader):
     def __init__(self, port, speed, header_byte):
@@ -160,11 +160,11 @@ class VideoSerialReader(SerialReader):
         while True:
             current_byte = int(self.ser.read())
 
-            if current_byte = 127 and len(self.current_list) >= self.length:
+            if current_byte == 127 and len(self.current_list) >= self.length:
                 self.previous_list = self.current_list[:]
                 self.current_list = []
 
-                if len(self.previous_list) = self.length:
+                if len(self.previous_list) == self.length:
                     # Compute crc
 
                     self.packet_queue.append(np.array([np.array([i]) for i in self.previous_list[5:-4]]))
@@ -174,7 +174,6 @@ class VideoSerialReader(SerialReader):
 
                 self.current_list.append(current_byte)
                 self.current_list += list(length)
-            
+
             #self.current_list.append(current_byte)
             #self.current_list.append(self.ser.read())
-            
