@@ -2,7 +2,7 @@
 MASA web dashboard continuing development
 
 ## Framework Used
-<b> Built with <b>
+<b> Built with </b>
 * Python
 * HTML, Javascript, CSS
 * [Flask Microframework](https://flask.palletsprojects.com/en/1.1.x/)
