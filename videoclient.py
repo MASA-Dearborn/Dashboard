@@ -16,7 +16,7 @@ def convert_hex_to_bytelist(hex_in):
     for i in range(int(len(hexstr) / 2)):
         byt = int(hexstr[i*2:i*2+2], 16)
         bytlst.append(byt)
-    
+
     return bytlst
 
 def main():
@@ -30,7 +30,8 @@ def main():
     client_socket.connect(('127.0.0.1', 9992))
     connection = client_socket.makefile('wb')
 
-    capture = cv2.VideoCapture("IMG_7036.mp4")
+    capture = cv2.VideoCapture(0) # video capture class, frame by frame, takes
+    # either from an mp4 file or the device index (0 is the first camera/webcam)
 
     capture.set(cv2.CAP_PROP_FRAME_WIDTH,360)
     capture.set(cv2.CAP_PROP_FRAME_HEIGHT,240)
@@ -69,7 +70,7 @@ def main():
         client_socket.sendall(struct.pack(">L", size) + data)
         img_counter += 1
         time.sleep(1 / 30)
-	
+
 
 if __name__ == "__main__":
     main()
