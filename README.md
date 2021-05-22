@@ -28,7 +28,7 @@ Note when testing you will want to use the config file "test.json". Also note th
 * The Dashboard needs a single runnable file to run the entire Dashboard so that testing, debugging and actually running the Dashboard is easier
 * A well defined interface that sends data to the data client from a sub program that collects the data needs to be developed
 * Figure out how the TeleGPS reports the transmitter voltage
-* Modify map and GPS serial reader to work with current dashbaord rather than working independantly
+* Modify map and GPS serial reader to work with current dashboard rather than working independantly
   * Map needs to display GPS coordinates as a line with a start and end point rather than a series of dots at each recorded location
   * Map is not centering on the user location
   * Map needs the ability for the user to easily center on the user, booster, or dart
