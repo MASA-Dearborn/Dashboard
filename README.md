@@ -25,8 +25,8 @@ Note when testing you will want to use the config file "test.json". Also note th
 
 ## Dashboard To Do
 * Remove references to Eggfinder and replace with TeleGPS development (data types need an overhaul)
-* Integrate GPS map development (two branches— frontend and backend currently separated for map) and the actual running of a GPS module with the Dashboard
-* Video needs to be simulated being sent through a COM port since sending through the M2RB will require more M2RB development
+* Integrate GPS map development (frontend and backend currently separated into two branches)
+* Video needs to be simulated being sent through a COM port
 * Create all the infrastructure for the M2RB data (will most likely be unable to integrate the M2RB until that board continues development, so the Dashboard should be ready for integration, ie. set up with simulated packets) (data types need an overhaul)
 * The Dashboard app should run without incoming data, so it will be possible to find the rocket through the map
 * The Dashboard needs to be implemented on a web server
