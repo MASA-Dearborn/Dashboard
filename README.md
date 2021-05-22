@@ -25,7 +25,7 @@ Note when testing you will want to use the config file "test.json". Also note th
 ## Dashboard To Do
 * The documentation will need an almost complete overhaul
 * Remove references to Eggfinder and replace with TeleGPS development (data types need an overhaul)
-* The Dashboard needs a single runable file to run the entire Dashboard so that testing, debugging and actually running the Dashboard is easier
+* The Dashboard needs a single runnable file to run the entire Dashboard so that testing, debugging and actually running the Dashboard is easier
 * A well defined interface that sends data to the data client from a sub program that collects the data needs to be developed
 * Figure out how the TeleGPS reports the transmitter voltage
 * Modify map and GPS serial reader to work with current dashbaord rather than working independantly
