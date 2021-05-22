@@ -1,4 +1,4 @@
-rawOne.txt
-rawTwo.txt
-translatedOne.csv
-translatedTwo.csv
+.vscode/settings.json
+masalib/__pycache__/
+database.db
+test_database.db

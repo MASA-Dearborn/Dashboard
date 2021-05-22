@@ -1,0 +1,119 @@
+body {
+    background-color: #F5F5F5;
+}
+#page-header {
+    /*display: block;*/
+    overflow: hidden;
+    background-color: #94352D;
+    position: fixed;
+    size: fixed;
+    padding: 10px 0 0px 25px;
+    height: 100px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 2px solid #928448;
+    z-index: 100000;
+}
+#header-logo {
+    float:left;
+    margin-right: 20px;
+    height: 90%;
+}
+#header-title {
+    position: center;
+    color: #EACE44;
+    font-family: "Cairo", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    margin-top: -40px;
+    font-size: 90px;
+}
+#header-color-select {
+    height: 100%;
+    width: 32px;
+    position: absolute;
+    display: grid;
+    float: right;
+    right: 0;
+    top: 0;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    background-color: white;
+    border-left: 1px solid #928448;
+}
+#main {
+    height: 750px;
+    margin-top: 125px;
+    margin-left: 8px;
+    margin-right: 8px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-column-gap: 15px;
+}
+#graph-container {
+    display: grid;
+    grid-template-rows: 3fr 1fr;
+    grid-row-gap: 15px;
+}
+#map-container {
+    display: grid;
+    grid-template-rows: 3fr 1fr;
+    grid-row-gap: 15px;
+}
+#masa-graph {
+    border: 2px solid #928448;
+    border-radius:2px;
+    /*height: 650px;*/
+}
+#masa-map {
+    border: 2px solid #928448;
+    border-radius:2px;
+    /*height: 650px;*/
+}
+#graph-options {
+    border: 2px solid #928448;
+    display: grid;
+    background-color: white;
+    border-radius:2px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    /*height: 100px;*/
+}
+#map-options {
+    border: 2px solid #928448;
+    background-color: white;
+    border-radius:2px;
+    /*height: 100px;*/
+}
+.masa-check {
+    float: left;
+    font-size: 17px;
+    font-family: "Cairo", sans-serif;
+    position: relative;
+}
+.masa-check > p {
+    top: -21px;
+    left: 24px;
+    position: absolute;
+    display: inline;
+}
+input[type='checkbox'] {
+    -webkit-appearance:none;
+    width:15px;
+    height:15px;
+    background:#FFFFEE;
+    border-radius:2px;
+    border:1px solid #555;
+}
+input[type='checkbox']:checked {
+    background: #1B2E50;
+}
+input[type='checkbox']:active {
+    width: 14px;
+    height:14px;
+    margin-left: 4px;
+    margin-top: 4px;
+}
+input[type='checkbox']:focus {
+    outline: 0;
+}
