@@ -40,3 +40,5 @@ Note when testing you will want to use the config file "test.json". Also note th
 * Toggle for plot elements do not toggle the plot elements
 * The Dashboard needs a single runable file to run the entire Dashboard so that testing, debugging and actually running the Dashboard is easier
 * Video also needs to be linked into the configuration file as current it calls for it but does not use the config file
+
+![UML Diagram](UMLDiagram.png)
