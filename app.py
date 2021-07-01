@@ -1,8 +1,9 @@
 # MASA Dashboard Web Server
 # By Dean Lawrence
 
-import argparse
-import json
+import argparse #parser for the command-line arguement which allows for the addition
+#of the config file
+import json #json encoder and decoder library, used for the config file
 import sqlite3
 import threading
 import cv2
@@ -78,10 +79,10 @@ def generate_frame():
 
             if not flag:
                 continue
-                
-        yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
+
+        yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
 			    bytearray(encoded_image) + b'\r\n')
-    
+
 
 @app.route('/')
 @cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
@@ -102,7 +103,7 @@ def fetch():
             c = conn.cursor()
             c.execute("SELECT * FROM " + table + " ORDER BY id DESC LIMIT 1;")
             response[table] = list(c.fetchone())
-        
+
     return jsonify(response)
 
 @app.route('/video')
@@ -112,14 +113,15 @@ def video():
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser() #creates the argument parser for the config file
 
     parser.add_argument("-c", "--config", type=str, required=True, help="Path to configuration file")
+    #adds the config file argument to the argument parser
 
-    args = parser.parse_args()
+    args = parser.parse_args() #runs the argument parser, asking for the config file
 
-    with open(args.config, "r") as fp:
-        config = json.loads(fp.read())["server"]
+    with open(args.config, "r") as fp: #open up the config file in read format
+        config = json.loads(fp.read())["server"] #open up the server section of the config file
 
     tables_list = config["tables"]
 

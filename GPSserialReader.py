@@ -1,24 +1,9 @@
 import serial #imports pyserial to read the data from the serial line
 import threading #imports multithreading for the queue and saving data functions
 
-portOne = input("Input Port of device:") #asks for the port of the serial device
-
-serialOne = serial.Serial(portOne, 9600, timeout=1) #opens up a serial line at portOne
-# with a timeout of 1 second and a baud of 9600
-
-multiplePorts = input("Two ports enabled? (Y/N):") #defines the multiplePorts variable which
-# keeps track of whether the program has one or two ports open
-
-while multiplePorts != "Y" and multiplePorts != "N": #continue checking the multiplePorts
-# value until a valid response is given
-    multiplePorts = input("Two ports enabled? (Y/N):")
-
-if multiplePorts == "Y": #runs if the user tells the program there's a second port
-    portTwo = input("Input Port of second device:") #ask for the second port of the second
-    #serial device
-
-    serialTwo = serial.Serial(portTwo, 9600, timeout=1) #opens up a serial line at portTwo
-    # with a timeout of 1 second and a buad of 9600
+import json #json encoder and decoder library, used for the config file
+import argparse #parser for the command-line arguement which allows for the addition
+#of the config file
 
 def TeleGPStranslation(input):
     # the main function of the program, turns the TeleGPS strings into comma
@@ -227,6 +212,34 @@ def queueData(serialName, rawQueueName, translatedQueueName, translationFunction
             translatedQueueName.append(translationFunction(recieved[1:]))
 
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser() #creates the argument parser for the config file
+
+    parser.add_argument("-c", "--config", type=str, required=True, help="Path to configuration file")
+    #adds the config file argument to the argument parser
+
+    args = parser.parse_args() #runs the argument parser, asking for the config file
+
+    with open(args.config, "r") as fp: #open up the config file in read format
+        config = json.loads(fp.read())["client"]["recievers"] #open up the
+        #recievers section of the config file
+
+    serialOne = serial.Serial(config["teleGPS0"]["port"], config["teleGPS0"]["speed"], timeout=1)
+    #opens up a serial line at the config file teleGPS0's port
+    #and speed (baud), with a timouet of 1 second
+
+    multiplePorts = input("Two ports enabled? (Y/N):") #defines the multiplePorts variable which
+    # keeps track of whether the program has one or two ports open
+
+    while multiplePorts != "Y" and multiplePorts != "N": #continue checking the multiplePorts
+    # value until a valid response is given
+        multiplePorts = input("Two ports enabled? (Y/N):")
+
+    if multiplePorts == "Y": #runs if the user tells the program there's a second port
+
+        serialTwo = serial.Serial(config["teleGPS1"]["port"], config["teleGPS1"]["speed"], timeout=1)
+        #opens up a serial line at the config file teleGPS1's port
+        #and speed (baud), with a timouet of 1 second
 
     print(serialOne.readline()) #primes the readline to work-- for some reason
     #the readline always starts with a junk line but this simply prints that line
