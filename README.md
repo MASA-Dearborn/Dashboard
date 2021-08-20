@@ -15,6 +15,7 @@ MASA web dashboard continuing development
 * [openCV](https://pypi.org/project/opencv-python/) (pip install opencv-python)
 * crcmod (pip install crcmod)
 * pyserial (pip install pyserial)
+* [virtual serial port software](https://freevirtualserialports.com/) (for serialReaderSim program)
 
 ## Running the Dashboard
 1. Open up the file dataserver.py and pass it a config file (using --config="\<filename\>"), this will be the data server code in the final

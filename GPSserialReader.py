@@ -1,9 +1,9 @@
-import serial #imports pyserial to read the data from the serial line
-import threading #imports multithreading for the queue and saving data functions
+import serial #imports pyserial module for handling serial communication
+import threading #imports multithreading module for the queue and saving data functions
 
-import json #json encoder and decoder library, used for the config file
-import argparse #parser for the command-line arguement which allows for the addition
-#of the config file
+import json #imports json encoder and decoder module, used for the config file
+import argparse #imports parser module for the command-line arguement which allows
+#for the addition of the config file
 
 def TeleGPStranslation(input):
     # the main function of the program, turns the TeleGPS strings into comma
@@ -211,8 +211,8 @@ def queueData(serialName, rawQueueName, translatedQueueName, translationFunction
         #no error
             translatedQueueName.append(translationFunction(recieved[1:]))
 
-if __name__ == '__main__':
-
+def main():
+    #main function, runs the serial recievers and file saving functions
     parser = argparse.ArgumentParser() #creates the argument parser for the config file
 
     parser.add_argument("-c", "--config", type=str, required=True, help="Path to configuration file")
@@ -327,3 +327,6 @@ if __name__ == '__main__':
                 #run the translated data thread for serialTwo
                 translatedThreadTwo.start()
                 translatedThreadTwo.join()
+
+if __name__ == "__main__":
+    main()
