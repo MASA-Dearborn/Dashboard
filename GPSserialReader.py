@@ -221,10 +221,10 @@ def main():
     args = parser.parse_args() #runs the argument parser, asking for the config file
 
     with open(args.config, "r") as fp: #open up the config file in read format
-        config = json.loads(fp.read())["client"]["recievers"] #open up the
+        config = json.loads(fp.read())["client"]["readers"] #open up the
         #recievers section of the config file
 
-    serialOne = serial.Serial(config["teleGPS0"]["port"], config["teleGPS0"]["speed"], timeout=1)
+    serialOne = serial.Serial(config["TeleGPS0"]["port"], config["TeleGPS0"]["speed"], timeout=1)
     #opens up a serial line at the config file teleGPS0's port
     #and speed (baud), with a timouet of 1 second
 
@@ -237,11 +237,11 @@ def main():
 
     if multiplePorts == "Y": #runs if the user tells the program there's a second port
 
-        serialTwo = serial.Serial(config["teleGPS1"]["port"], config["teleGPS1"]["speed"], timeout=1)
+        serialTwo = serial.Serial(config["TeleGPS1"]["port"], config["TeleGPS1"]["speed"], timeout=1)
         #opens up a serial line at the config file teleGPS1's port
         #and speed (baud), with a timouet of 1 second
 
-    print(serialOne.readline()) #primes the readline to work-- for some reason
+    #print(serialOne.readline()) #primes the readline to work-- for some reason
     #the readline always starts with a junk line but this simply prints that line
 
     serialOne.write("E 0\nm 0\nc T1\nm 20\n".encode('utf-8'))

@@ -4,12 +4,8 @@
         "server_port": 9990,
         "readers": {
             "Data": {"port": "COM0", "speed": 9600, "header": 0, "start_byte": 126, "stop_byte": 127},
-            "TeleGPS0": {"port": "COM1", "speed": 9600, "header": 1},
-            "TeleGPS1": {"port": "COM2", "speed": 9600, "header": 2}
-        },
-        "recievers": {
-          "TeleGPS0": {"port": "COM6", "speed": 9600},
-          "TeleGPS1": {"port": "COM7", "speed": 9600}
+            "TeleGPS0": {"port": "COM2", "speed": 9600, "header": 1},
+            "TeleGPS1": {"port": "COM1", "speed": 9600, "header": 2}
         }
     },
     "server": {
